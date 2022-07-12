@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Privacy" parent="@style/Text">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">14px</item>
+    </style>
+
+    <style name="Text">Text</style>
+</resources>

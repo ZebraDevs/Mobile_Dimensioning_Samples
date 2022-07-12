@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Dimensionamento da mobile</string>
+    <string name="welcome_message">Benvenuti alla demo "Dimensionamento da mobile"</string>
+    <string name="app_info">Questa app è stata progettata per acquisire le dimensioni di lunghezza, larghezza e altezza usando la fotocamera e l\'hardware di rilevamento della profondità del tuo dispositivo.</string>
+    <string name="box_ID">ID collo:</string>
+    <string name="scan_boxID">Scansiona o inserisci l\'ID collo:</string>
+    <string name="start_dimensioning">Avvia dimensionamento</string>
+    <string name="scan_barcode">Scansiona codice a barre</string>
+    <string name="reset_data">REIMPOSTA</string>
+    <string name="state_changes">Variazioni di stato </string>
+    <string name="reset_state">Reimposta</string>
+    <string name="set_dimensioning_parameter">Imposta parametro dimensioni</string>
+    <string name="navigation_drawer_home">Home</string>
+    <string name="navigation_drawer_about">Info</string>
+    <string name="bundle_version">Versione Bundle: </string>
+    <string name="framework_version">Framework Version: </string>
+    <string name="service_version">Versione di servizio: </string>
+    <string name="regulatory_approval">"Approvazione normativa: "</string>
+    <string name="copyrights">© 2021 Zebra Technologies Corp \n Tutti i diritti riservati.</string>
+    <!--to toggle the open close button
+    of the navigation drawer-->
+    <string name="nav_open">aprire</string>
+    <string name="nav_close">chiudere</string>
+
+    <!-- String use to inform SDK crash -->
+    <string name="SDK_service_crashed">Il servizio SDK si è bloccato</string>
+    <string name="dimensioning_service_availability_check">Servizio di dimensionamento non disponibile</string>
+    <string name="app_version">App Versione: </string>
+
+    <!-- String use to inform about permission -->
+    <string name="parcel_config_file_not_found">File di configurazione del pacco non trovato</string>
+    <string name="permission_granted">Permesso accordato</string>
+    <string name="permission_not_granted">Autorizzazione non concessa</string>
+
+    <string name="save_image">Salva immagine</string>
+</resources>

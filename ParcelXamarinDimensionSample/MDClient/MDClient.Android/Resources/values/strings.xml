@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+	<string name="app_name">Mobile Dimensioning</string>
+	<string name="welcome_message">Welcome to the Mobile Dimensioning Demo</string>
+	<string name="app_info">This app is designed to capture the dimensions of the length, width and height using the depth sensing hardware and camera on your device.</string>
+	<string name="box_ID">BoxID:</string>
+	<string name="scan_boxID">Scan or type in your Box ID:</string>
+	<string name="start_dimensioning">Start Dimensioning</string>
+	<string name="scan_barcode">Scan Barcode</string>
+	<string name="reset_data">RESET</string>
+</resources>

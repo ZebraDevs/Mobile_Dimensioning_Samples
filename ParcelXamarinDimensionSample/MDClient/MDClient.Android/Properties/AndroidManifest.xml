@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="com.sample.xamarindimensionapp">
+	<uses-sdk android:minSdkVersion="30" android:targetSdkVersion="30" />
+	<application android:label="XamarinDimensionApp" android:theme="@style/MainTheme"></application>
+	<queries>
+		<package android:name="com.zebra.dimensioning" />
+	</queries>
+</manifest>

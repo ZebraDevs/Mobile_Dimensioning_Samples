@@ -1,0 +1,68 @@
+.vs/
+
+# User-specific files
+*.suo
+*.user
+*.sln.docstates
+*.userprefs
+
+# ignore Xamarin.Android Resource.Designer.cs files
+**/*.Droid/**/[Rr]esource.[Dd]esigner.cs
+**/*.Android/**/[Rr]esource.[Dd]esigner.cs
+**/Android/**/[Rr]esource.[Dd]esigner.cs
+**/Droid/**/[Rr]esource.[Dd]esigner.cs
+
+# Xamarin Components
+Components/
+
+# Build results
+MDClient/MDClient.Android/bin/[Dd]ebug/
+MDClient/MDClient.Android/bin/[Rr]elease/
+MDClient/MDClient.Android/[Bb]in/
+MDClient/MDClient.Android/[Oo]bj/
+MDClient/MDClient/bin/[Dd]ebug/
+MDClient/MDClient/bin/[Rr]elease/
+MDClient/MDClient/[Bb]in/
+MDClient/MDClient/[Oo]bj/
+
+BroadcastProtectionLibAndroid/.vs/
+BroadcastProtectionLibAndroid/BroadcastProtectionLibAndroid/bin/[Dd]ebug/
+BroadcastProtectionLibAndroid/BroadcastProtectionLibAndroid/bin/[Rr]elease/
+BroadcastProtectionLibAndroid/BroadcastProtectionLibAndroid/[Bb]in/
+BroadcastProtectionLibAndroid/BroadcastProtectionLibAndroid/[Oo]bj/
+
+*_i.c
+*_p.c
+*_i.h
+*.ilk
+*.meta
+*.obj
+*.pch
+*.pdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+
+# NuGet Packages Directory
+packages/
+*.nuget.targets
+*.lock.json
+*.nuget.props

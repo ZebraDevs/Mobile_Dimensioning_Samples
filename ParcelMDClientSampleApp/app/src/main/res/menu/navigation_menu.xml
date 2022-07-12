@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:ignore="HardcodedText">
+
+    <group android:checkableBehavior="single">
+
+        <item
+                android:id="@+id/nav_account"
+                android:icon="@drawable/home"
+                android:title="@string/navigation_drawer_home"
+                android:height="40px"
+                android:width="280px" />
+
+        <item
+                android:id="@+id/nav_settings"
+                android:title="@string/navigation_drawer_about"
+                android:icon="@drawable/zebraicon"
+                android:height="40px"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:lineSpacingMultiplier="1.57"
+                android:width="280px" />
+    </group>
+</menu>
