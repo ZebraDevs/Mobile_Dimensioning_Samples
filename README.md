@@ -2,11 +2,14 @@
 
 ## Java
 ### ParcelMDClientSampleApp
+This sample demonstrates the zebra recommended way of  usage  Mobile Parcel Dimensioning API in Line of Business Application (LOB) . This sample app is targeted for Java Development Enviroment. Use this as a reference to build your Application.
 Tested with:
 Android Studio Artic Fox
 
 ## Xamarin
 ### ParcelMDClientSampleApp
+This sample demonstrates the zebra recommended way of  usage  Mobile Parcel Dimensioning API in Line of Business Application (LOB) . This sample app is targeted for Xamarin Development Enviroment. Use this as a reference to build your Application.
+
 Tested with:
 Microsoft Visual Studio Professional 2022 Version 17.2.1
 Xamarin   17.2.0.174
