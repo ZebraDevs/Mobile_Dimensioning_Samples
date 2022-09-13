@@ -38,12 +38,11 @@ public class ConstantUtils
     public static final String IN = "in";
     public static final String INCH = "inch";
     public static final String CM = "cm";
-    public static final String BOX_ID = "BOX_ID";
     public static final String TIMESTAMP = "TIMESTAMP";
     public static final String SUPPORTED_UNITS = "SUPPORTED_UNITS";
     public static final String REGULATORY_APPROVAL = "REGULATORY_APPROVAL";
     public static final String READY_STATUS = "READY_STATUS";
-    public static final String PARCEL_ID = "PARCEL_ID ";
+    public static final String PARCEL_ID = "PARCEL_ID";
     public static final String API_TOKEN = "TOKEN";
     public static final String PACKAGE_NAME = "APPLICATION_PACKAGE";
     public static final String IMAGE = "IMAGE";

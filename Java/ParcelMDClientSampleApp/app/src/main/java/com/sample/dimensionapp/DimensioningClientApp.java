@@ -58,7 +58,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
     private static final String TAG = DimensioningClientApp.class.getSimpleName();
 
     private Context mContext = null;
-    private EditText mTxtLength, mTxtWidth, mTxtHeight, mBoxID;
+    private EditText mTxtLength, mTxtWidth, mTxtHeight, mParcelID;
     private Button mStartDimensioningButton, mScanBarcodeButton;
     private TextView mTextViewInch;
     private TextView mTextViewCm;
@@ -165,11 +165,11 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
             @Override
             public void onClick(View view)
             {
-                String boxID = mBoxID.getText().toString();
-                mBoxID.getText().clear();
-                Log.d(TAG, "boxID is: " + boxID);
+                String parcelID = mParcelID.getText().toString();
+                mParcelID.getText().clear();
+                Log.d(TAG, "boxID is: " + parcelID);
                 Log.e(TAG, ConstantUtils.START_DIMENSIONING);
-                sendIntentApi(ConstantUtils.INTENT_ACTION_GET_DIMENSION, ConstantUtils.BOX_ID, boxID);
+                sendIntentApi(ConstantUtils.INTENT_ACTION_GET_DIMENSION, ConstantUtils.PARCEL_ID, parcelID);
             }
         });
 
@@ -559,7 +559,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
         mTextViewLengthIcon = findViewById(R.id.lengthTextViewIcon);
         mTextViewWidthIcon = findViewById(R.id.widthTextViewIcon);
         mTextViewHeightIcon = findViewById(R.id.heightTextViewIcon);
-        mBoxID = findViewById(R.id.editTextBoxID);
+        mParcelID = findViewById(R.id.editTextBoxID);
         mStartDimensioningButton = findViewById(R.id.button);
         mScanBarcodeButton = findViewById(R.id.buttonScanBarcode);
         mLayoutLength = findViewById(R.id.linearlayoutLength);
@@ -804,8 +804,8 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
     private void displayScanResult(Intent initiatingIntent)
     {
         String decodedData = initiatingIntent.getStringExtra(ConstantUtils.DATA_WEDGE_INTENT_DATA_KEY);
-        mBoxID.getText().clear();
-        mBoxID.setText(decodedData);
+        mParcelID.getText().clear();
+        mParcelID.setText(decodedData);
     }
 
 
@@ -903,7 +903,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
         }
         if (mPersistBoxId != null)
         {
-            mBoxID.setText(mPersistBoxId);
+            mParcelID.setText(mPersistBoxId);
             mPersistBoxId = null;
         }
         super.onStart();
@@ -915,7 +915,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
         Log.d(TAG, "onRestart()");
         mPersistValue = false;
         mReportImageCheckBox.setChecked(false);
-        mBoxID.setText("");
+        mParcelID.setText("");
         super.onRestart();
     }
 
@@ -951,7 +951,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                 return true;
             case R.id.nav_settings:
                 mPersistImage = mReportImageCheckBox.isChecked();
-                mPersistBoxId = mBoxID.getText().toString();
+                mPersistBoxId = mParcelID.getText().toString();
                 startActivity(new Intent(this, AboutPageActivity.class));
                 finishAfterTransition();
                 return true;
