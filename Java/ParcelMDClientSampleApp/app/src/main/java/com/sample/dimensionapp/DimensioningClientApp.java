@@ -294,14 +294,23 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                             {
                                 if (dimResultCode == ConstantUtils.SUCCESS)
                                 {
+                                    Bundle params = new Bundle();
+                                    if (mReportImageCheckBox.isChecked())
+                                    {
+                                        params.putBoolean(ConstantUtils.REPORT_IMAGE, true);
+                                    }
                                     if (mPersistUnit != null)
                                     {
-                                        sendIntentApi(ConstantUtils.INTENT_ACTION_SET_DIMENSION_PARAMETER,
-                                                ConstantUtils.DIMENSIONING_UNIT, mPersistUnit);
+                                        params.putString(ConstantUtils.DIMENSIONING_UNIT, mPersistUnit);
+                                    }
+
+                                    if (params.isEmpty())
+                                    {
+                                        sendIntentApi(ConstantUtils.INTENT_ACTION_GET_DIMENSION_PARAMETER);
                                     }
                                     else
                                     {
-                                        sendIntentApi(ConstantUtils.INTENT_ACTION_GET_DIMENSION_PARAMETER);
+                                        sendIntentApi(ConstantUtils.INTENT_ACTION_SET_DIMENSION_PARAMETER, params);
                                     }
                                 }
                                 else
