@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Mobile Dimensioning</string>
+    <string name="app_name">Mobile Parcel Sample</string>
     <string name="welcome_message">Welcome to the Mobile Dimensioning Demo</string>
     <string name="app_info">This app is designed to capture the dimensions of the length, width and height using the depth sensing hardware and camera on your device.</string>
     <string name="box_ID">BoxID:</string>
