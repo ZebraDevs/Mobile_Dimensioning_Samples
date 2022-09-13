@@ -294,7 +294,6 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                             {
                                 if (dimResultCode == ConstantUtils.SUCCESS)
                                 {
-                                    enableStartDimensioningButton();
                                     if (mPersistUnit != null)
                                     {
                                         sendIntentApi(ConstantUtils.INTENT_ACTION_SET_DIMENSION_PARAMETER,
@@ -308,6 +307,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                                 else
                                 {
                                     Toast.makeText(this, dimResultMessage, Toast.LENGTH_SHORT).show();
+                                    disableStartDimensioningButton();
                                 }
                             }
                             catch (Exception e)
@@ -385,6 +385,8 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                                 if ((dimResultCode != ConstantUtils.SUCCESS) && (dimResultCode != ConstantUtils.CANCELED))
                                 {
                                     Toast.makeText(this, dimResultMessage, Toast.LENGTH_SHORT).show();
+                                    disableStartDimensioningButton();
+                                    sendIntentApi(ConstantUtils.INTENT_ACTION_DISABLE_DIMENSION, ENABLE_EXTRA_KEY, ENABLE_EXTRA_VALUE);
                                 }
                             }
                             catch (Exception e)
@@ -396,71 +398,78 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                         case ConstantUtils.INTENT_ACTION_GET_DIMENSION_PARAMETER:
                             try
                             {
-                                Bundle extras = intent.getExtras();
-                                if (extras.containsKey(ConstantUtils.READY_LENGTH))
+                                if (dimResultCode == ConstantUtils.SUCCESS)
                                 {
-                                    mReadyLength = (BigDecimal) intent.getSerializableExtra(ConstantUtils.READY_LENGTH);
-                                    Log.d(TAG, "Get Dimension Parameter Result mReadyLength: " + mReadyLength);
-                                }
-                                if (extras.containsKey(ConstantUtils.READY_WIDTH))
-                                {
-                                    mReadyWidth = (BigDecimal) intent.getSerializableExtra(ConstantUtils.READY_WIDTH);
-                                    Log.d(TAG, "Get Dimension Parameter Result mReadyWidth: " + mReadyWidth);
-                                }
-                                if (extras.containsKey(ConstantUtils.READY_HEIGHT))
-                                {
-                                    mReadyHeight = (BigDecimal) intent.getSerializableExtra(ConstantUtils.READY_HEIGHT);
-                                    Log.d(TAG, "Get Dimension Parameter Result mReadyHeight: " + mReadyHeight);
-                                }
-                                if (extras.containsKey(ConstantUtils.DIMENSIONING_UNIT))
-                                {
-                                    mUnit = intent.getStringExtra(ConstantUtils.DIMENSIONING_UNIT);
-                                    Log.d(TAG, "Get Dimension Parameter Result mUnit : " + mUnit);
-                                }
-                                if (extras.containsKey(ConstantUtils.BUNDLE_VERSION))
-                                {
-                                    mBundleVersion = intent.getStringExtra(ConstantUtils.BUNDLE_VERSION);
-                                    Log.d(TAG, "Get Dimension Parameter Result mBundleVersion: " + mBundleVersion);
-                                }
-                                if (extras.containsKey(ConstantUtils.FRAMEWORK_VERSION))
-                                {
-                                    mFrameworkVersion = intent.getStringExtra(ConstantUtils.FRAMEWORK_VERSION);
-                                    Log.d(TAG, "Get Dimension Parameter Result mFrameworkVersion: " + mFrameworkVersion);
-                                }
-                                if (extras.containsKey(ConstantUtils.SERVICE_VERSION))
-                                {
-                                    mServiceVersion = intent.getStringExtra(ConstantUtils.SERVICE_VERSION);
-                                    Log.d(TAG, "Get Dimension Parameter Result mServiceVersion: " + mServiceVersion);
-                                }
-                                if (extras.containsKey(ConstantUtils.SUPPORTED_UNITS))
-                                {
-                                    String[] supportedUnits = intent.getStringArrayExtra(ConstantUtils.SUPPORTED_UNITS);
-                                    updateUnitSwitch(supportedUnits);
-                                    Log.d(TAG, "Get Dimension Parameter Result supportedUnits: " + Arrays.toString(supportedUnits));
-                                }
-                                if (extras.containsKey(ConstantUtils.REGULATORY_APPROVAL))
-                                {
-                                    mRegulatoryApproval = intent.getStringExtra(ConstantUtils.REGULATORY_APPROVAL);
-                                    Log.d(TAG, "Get Dimension Parameter Result mRegulatoryApproval: " + mRegulatoryApproval);
-                                }
-                                if (extras.containsKey(ConstantUtils.REPORT_IMAGE))
-                                {
-                                    boolean reportImage = intent.getBooleanExtra(ConstantUtils.REPORT_IMAGE, false);
-                                    Log.d(TAG, "Get Dimension Parameter Result reportImage: " + reportImage);
-                                }
-                                if (mPersistValue && mPersistUnit != null)
-                                {
-                                    showDimensioningParameterStatus(mPersistLength, mPersistWidth, mPersistHeight,
-                                            mPersistLengthStatus, mPersistWidthStatus, mPersistHeightStatus, mPersistUnit);
+                                    Bundle extras = intent.getExtras();
+                                    if (extras.containsKey(ConstantUtils.READY_LENGTH))
+                                    {
+                                        mReadyLength = (BigDecimal) intent.getSerializableExtra(ConstantUtils.READY_LENGTH);
+                                        Log.d(TAG, "Get Dimension Parameter Result mReadyLength: " + mReadyLength);
+                                    }
+                                    if (extras.containsKey(ConstantUtils.READY_WIDTH))
+                                    {
+                                        mReadyWidth = (BigDecimal) intent.getSerializableExtra(ConstantUtils.READY_WIDTH);
+                                        Log.d(TAG, "Get Dimension Parameter Result mReadyWidth: " + mReadyWidth);
+                                    }
+                                    if (extras.containsKey(ConstantUtils.READY_HEIGHT))
+                                    {
+                                        mReadyHeight = (BigDecimal) intent.getSerializableExtra(ConstantUtils.READY_HEIGHT);
+                                        Log.d(TAG, "Get Dimension Parameter Result mReadyHeight: " + mReadyHeight);
+                                    }
+                                    if (extras.containsKey(ConstantUtils.DIMENSIONING_UNIT))
+                                    {
+                                        mUnit = intent.getStringExtra(ConstantUtils.DIMENSIONING_UNIT);
+                                        Log.d(TAG, "Get Dimension Parameter Result mUnit : " + mUnit);
+                                    }
+                                    if (extras.containsKey(ConstantUtils.BUNDLE_VERSION))
+                                    {
+                                        mBundleVersion = intent.getStringExtra(ConstantUtils.BUNDLE_VERSION);
+                                        Log.d(TAG, "Get Dimension Parameter Result mBundleVersion: " + mBundleVersion);
+                                    }
+                                    if (extras.containsKey(ConstantUtils.FRAMEWORK_VERSION))
+                                    {
+                                        mFrameworkVersion = intent.getStringExtra(ConstantUtils.FRAMEWORK_VERSION);
+                                        Log.d(TAG, "Get Dimension Parameter Result mFrameworkVersion: " + mFrameworkVersion);
+                                    }
+                                    if (extras.containsKey(ConstantUtils.SERVICE_VERSION))
+                                    {
+                                        mServiceVersion = intent.getStringExtra(ConstantUtils.SERVICE_VERSION);
+                                        Log.d(TAG, "Get Dimension Parameter Result mServiceVersion: " + mServiceVersion);
+                                    }
+                                    if (extras.containsKey(ConstantUtils.SUPPORTED_UNITS))
+                                    {
+                                        String[] supportedUnits = intent.getStringArrayExtra(ConstantUtils.SUPPORTED_UNITS);
+                                        updateUnitSwitch(supportedUnits);
+                                        Log.d(TAG, "Get Dimension Parameter Result supportedUnits: " + Arrays.toString(supportedUnits));
+                                    }
+                                    if (extras.containsKey(ConstantUtils.REGULATORY_APPROVAL))
+                                    {
+                                        mRegulatoryApproval = intent.getStringExtra(ConstantUtils.REGULATORY_APPROVAL);
+                                        Log.d(TAG, "Get Dimension Parameter Result mRegulatoryApproval: " + mRegulatoryApproval);
+                                    }
+                                    if (extras.containsKey(ConstantUtils.REPORT_IMAGE))
+                                    {
+                                        boolean reportImage = intent.getBooleanExtra(ConstantUtils.REPORT_IMAGE, false);
+                                        Log.d(TAG, "Get Dimension Parameter Result reportImage: " + reportImage);
+                                    }
+                                    if (mPersistValue && mPersistUnit != null)
+                                    {
+                                        showDimensioningParameterStatus(mPersistLength, mPersistWidth, mPersistHeight,
+                                                mPersistLengthStatus, mPersistWidthStatus, mPersistHeightStatus, mPersistUnit);
+                                    }
+                                    else
+                                    {
+                                        showDimensioningParameterStatus(mReadyLength, mReadyWidth, mReadyHeight,
+                                                ConstantUtils.READY_STATUS, ConstantUtils.READY_STATUS, ConstantUtils.READY_STATUS, mUnit);
+                                    }
+
+                                    enableStartDimensioningButton();
                                 }
                                 else
                                 {
-                                    showDimensioningParameterStatus(mReadyLength, mReadyWidth, mReadyHeight,
-                                            ConstantUtils.READY_STATUS, ConstantUtils.READY_STATUS, ConstantUtils.READY_STATUS, mUnit);
-                                }
-                                if (dimResultCode != ConstantUtils.SUCCESS)
-                                {
                                     Toast.makeText(this, dimResultMessage, Toast.LENGTH_SHORT).show();
+                                    disableStartDimensioningButton();
+                                    sendIntentApi(ConstantUtils.INTENT_ACTION_DISABLE_DIMENSION, ENABLE_EXTRA_KEY, ENABLE_EXTRA_VALUE);
                                 }
                             }
                             catch (Exception e)
@@ -479,6 +488,8 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                                 else
                                 {
                                     Toast.makeText(this, dimResultMessage, Toast.LENGTH_SHORT).show();
+                                    disableStartDimensioningButton();
+                                    sendIntentApi(ConstantUtils.INTENT_ACTION_DISABLE_DIMENSION, ENABLE_EXTRA_KEY, ENABLE_EXTRA_VALUE);
                                 }
                             }
                             catch (Exception e)
@@ -685,6 +696,16 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
         mStartDimensioningButton.setEnabled(true);
         mStartDimensioningButton.setClickable(true);
         mStartDimensioningButton.setBackgroundColor(Color.parseColor("#2185D5"));
+    }
+
+    /**
+     * disableStartDimensioningButton function is used to Disable the START DIMENSION button.
+     */
+    public void disableStartDimensioningButton()
+    {
+        mStartDimensioningButton.setEnabled(false);
+        mStartDimensioningButton.setClickable(false);
+        mStartDimensioningButton.setBackgroundColor(Color.parseColor("#808080"));
     }
 
     /**
