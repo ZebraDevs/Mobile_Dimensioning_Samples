@@ -44,6 +44,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -56,6 +57,7 @@ import java.util.Objects;
 public class DimensioningClientApp extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
     private static final String TAG = DimensioningClientApp.class.getSimpleName();
+    private static final int TOKEN_EXPIRATION_HOURS = 18;
 
     private Context mContext = null;
     private EditText mTxtLength, mTxtWidth, mTxtHeight, mParcelID;
@@ -75,8 +77,8 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
     private DrawerLayout drawerLayout;
 
     private final BroadCastAuthenticator vIntentprotect = new BroadCastAuthenticator();
-    protected static String token = "";
-    private boolean mRetryingToken;
+    static Instant mTokenExpiration;
+    static String token = "";
 
     // Save values to display after orientation change
     private static boolean mPersistValue = false;
@@ -200,6 +202,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
             token = vIntentprotect.getToken(ConstantUtils.SERVICE_IDENTIFIER);
             if (token != null && !token.isEmpty())
             {
+                mTokenExpiration = Instant.now().plus(TOKEN_EXPIRATION_HOURS, ChronoUnit.HOURS);
                 if (isDimensioningServiceAvailable())
                 {
                     sendIntentApi(ConstantUtils.INTENT_ACTION_ENABLE_DIMENSION, ENABLE_EXTRA_KEY, ENABLE_EXTRA_VALUE);
@@ -277,15 +280,6 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                     if (dimResultMessage == null)
                         dimResultMessage = "";
                     Log.d(TAG, "onActivityResult: " + actionName + ", " + dimResultCode + ", " + dimResultMessage);
-
-                    if (!mRetryingToken && (dimResultCode == ConstantUtils.ERROR) && dimResultMessage.equals("Access Denied"))
-                    {
-                        // The token expired (after 24 hours)
-                        mRetryingToken = true;
-                        generateToken();
-                        return;
-                    }
-                    mRetryingToken = false;
 
                     switch (actionName)
                     {
@@ -895,7 +889,17 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
     protected void onStart()
     {
         Log.d(TAG, "onStart()");
-        sendIntentApi(ConstantUtils.INTENT_ACTION_ENABLE_DIMENSION, ENABLE_EXTRA_KEY, ENABLE_EXTRA_VALUE);
+        if (token != null && !token.isEmpty())
+        {
+            if (mTokenExpiration.isBefore(Instant.now()))
+            {
+                generateToken();
+            }
+            else
+            {
+                sendIntentApi(ConstantUtils.INTENT_ACTION_ENABLE_DIMENSION, ENABLE_EXTRA_KEY, ENABLE_EXTRA_VALUE);
+            }
+        }
         if (mPersistImage)
         {
             mReportImageCheckBox.setChecked(mPersistImage);
