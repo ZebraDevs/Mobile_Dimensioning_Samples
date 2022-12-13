@@ -19,6 +19,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -54,7 +55,7 @@ import java.util.Objects;
  * DimensioningClientApp Activity.
  * This is the first Activity that is initiated when application is launched.
  */
-public class DimensioningClientApp extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
+public class DimensioningClientApp extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ViewTreeObserver.OnWindowFocusChangeListener
 {
     private static final String TAG = DimensioningClientApp.class.getSimpleName();
     private static final int TOKEN_EXPIRATION_HOURS = 18;
@@ -93,6 +94,15 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
     private static String mPersistBoxId;
 
     @Override
+    public void onWindowFocusChanged(boolean hasFocus)
+    {
+        if (hasFocus)
+        {
+            setDataWedgeProfile();
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         Log.d(TAG, "onCreate()");
@@ -114,7 +124,6 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
         }
 
         initialization();
-        setDataWedgeProfile();
 
         mReportImageCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
                                                         {
@@ -992,7 +1001,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
 
         keyStrokePluginConfig.putBundle("PARAM_LIST", keystrokeConfigParams);
 
-        ArrayList configList = new ArrayList<Bundle>();
+        ArrayList<Bundle> configList = new ArrayList<>();
         configList.add(intentPluginConfig);
         configList.add(keyStrokePluginConfig);
 
