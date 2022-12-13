@@ -112,15 +112,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
         //Token authenticator initialization.
         if (token == null || token.isEmpty())
         {
-            vIntentprotect.initialize(getApplicationContext(), new OnInitCallback()
-            {
-                @Override
-                public void onInitialized()
-                {
-                    Log.d(TAG, "BroadCastAuthenticator is successfully initialized");
-                    generateToken();
-                }
-            });
+            generateToken();
         }
 
         initialization();
@@ -206,51 +198,59 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
     public void generateToken()
     {
         Log.d(TAG, "generateToken()");
-        try
+        vIntentprotect.initialize(getApplicationContext(), new OnInitCallback()
         {
-            token = vIntentprotect.getToken(ConstantUtils.SERVICE_IDENTIFIER);
-            if (token != null && !token.isEmpty())
+            @Override
+            public void onInitialized()
             {
-                mTokenExpiration = Instant.now().plus(TOKEN_EXPIRATION_HOURS, ChronoUnit.HOURS);
-                if (isDimensioningServiceAvailable())
+                Log.d(TAG, "BroadCastAuthenticator is successfully initialized");
+                try
                 {
-                    sendIntentApi(ConstantUtils.INTENT_ACTION_ENABLE_DIMENSION, ENABLE_EXTRA_KEY, ENABLE_EXTRA_VALUE);
+                    token = vIntentprotect.getToken(ConstantUtils.SERVICE_IDENTIFIER);
+                    if (token != null && !token.isEmpty())
+                    {
+                        mTokenExpiration = Instant.now().plus(TOKEN_EXPIRATION_HOURS, ChronoUnit.HOURS);
+                        if (isDimensioningServiceAvailable())
+                        {
+                            sendIntentApi(ConstantUtils.INTENT_ACTION_ENABLE_DIMENSION, ENABLE_EXTRA_KEY, ENABLE_EXTRA_VALUE);
+                        }
+                        else
+                        {
+                            Log.e(TAG, getResources().getString(R.string.dimensioning_service_availability_check));
+                            runOnUiThread(new Runnable()
+                            {
+                                public void run()
+                                {
+                                    Toast.makeText(mContext, getResources().getString(R.string.dimensioning_service_availability_check), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+                    else
+                    {
+                        Log.d(TAG, "Token is empty or null");
+                        runOnUiThread(new Runnable()
+                        {
+                            public void run()
+                            {
+                                Toast.makeText(mContext, "Access Denied", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
                 }
-                else
+                catch (Exception exception)
                 {
-                    Log.e(TAG, getResources().getString(R.string.dimensioning_service_availability_check));
+                    Log.e(TAG, "generateToken", exception);
                     runOnUiThread(new Runnable()
                     {
                         public void run()
                         {
-                            Toast.makeText(mContext, getResources().getString(R.string.dimensioning_service_availability_check), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "Access Denied", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
             }
-            else
-            {
-                Log.d(TAG, "Token is empty or null");
-                runOnUiThread(new Runnable()
-                {
-                    public void run()
-                    {
-                        Toast.makeText(mContext, "Access Denied", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        }
-        catch (Exception exception)
-        {
-            Log.e(TAG, "generateToken", exception);
-            runOnUiThread(new Runnable()
-            {
-                public void run()
-                {
-                    Toast.makeText(mContext, "Access Denied", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
+        });
     }
 
     // override the onOptionsItemSelected()
@@ -810,7 +810,6 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
         mParcelID.getText().clear();
         mParcelID.setText(decodedData);
     }
-
 
     private final BroadcastReceiver datawedgeBroadcastReceiver = new BroadcastReceiver()
     {
