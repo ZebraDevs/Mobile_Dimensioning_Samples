@@ -609,7 +609,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                                                 final BigDecimal height, String mLengthStatus,
                                                 String mWidthStatus, String mHeightStatus, String unit)
     {
-        String uiUnit = (unit.equalsIgnoreCase(DimensioningConstants.INCH) ? IN : unit.toLowerCase());
+        String uiUnit = " " + (unit.equalsIgnoreCase(DimensioningConstants.INCH) ? IN : unit.toLowerCase());
 
         String dimensionLength = length.toString() + uiUnit;
         mTxtLength.setText(dimensionLength);

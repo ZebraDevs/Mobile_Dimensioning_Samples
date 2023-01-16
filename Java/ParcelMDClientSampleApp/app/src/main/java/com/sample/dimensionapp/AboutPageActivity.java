@@ -49,7 +49,6 @@ public class AboutPageActivity extends AppCompatActivity implements NavigationVi
                 + getResources().getString(R.string.bundle_version) + " " + DimensioningClientApp.mBundleVersion + "\n"
                 + getResources().getString(R.string.framework_version) + " " + DimensioningClientApp.mFrameworkVersion + "\n"
                 + getResources().getString(R.string.service_version) + " " + DimensioningClientApp.mServiceVersion + "\n"
-                + getResources().getString(R.string.regulatory_approval) + " " + DimensioningClientApp.mRegulatoryApproval
                 + "\n\n" + getResources().getString(R.string.copyrights);
         mTextViewVersion.setText(mVersions);
     }
