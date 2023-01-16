@@ -1,9 +1,5 @@
 package com.sample.dimensionapp;
 
-import static com.sample.dimensionapp.ConstantUtils.ENABLE_EXTRA_KEY;
-import static com.sample.dimensionapp.ConstantUtils.ENABLE_EXTRA_VALUE;
-import static com.sample.dimensionapp.ConstantUtils.NO_DIM;
-
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -59,6 +55,13 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
 {
     private static final String TAG = DimensioningClientApp.class.getSimpleName();
     private static final int TOKEN_EXPIRATION_HOURS = 18;
+    private static final String IN = "in";
+    private static final String READY_STATUS = "READY_STATUS";
+    private static final int REQUEST_CODE = 100;
+
+    private static final String DATA_WEDGE_INTENT_ACTION_SCANNING_RESULT = "com.zebra.mobiledimensioning.DW_SCANNING_RESULT";
+    private static final String DATA_WEDGE_INTENT_DATA_KEY = "com.symbol.datawedge.data_string";
+    private static final String DATA_WEDGE_PROFILE_NAME = "MDClient";
 
     private Context mContext = null;
     private EditText mTxtLength, mTxtWidth, mTxtHeight, mParcelID;
@@ -70,7 +73,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
     private CheckBox mReportImageCheckBox;
     private View mLayoutLength, mLayoutWidth, mLayoutHeight;
 
-    private String mUnit = ConstantUtils.INCH;
+    private String mUnit = DimensioningConstants.INCH;
     private BigDecimal mReadyLength, mReadyWidth, mReadyHeight;
     public static String mBundleVersion, mFrameworkVersion, mServiceVersion, mRegulatoryApproval;
 
@@ -84,9 +87,9 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
     // Save values to display after orientation change
     private static boolean mPersistValue = false;
     private static BigDecimal mPersistLength, mPersistWidth, mPersistHeight;
-    private static String mPersistLengthStatus = "READY_STATUS";
-    private static String mPersistWidthStatus = "READY_STATUS";
-    private static String mPersistHeightStatus = "READY_STATUS";
+    private static String mPersistLengthStatus = READY_STATUS;
+    private static String mPersistWidthStatus = READY_STATUS;
+    private static String mPersistHeightStatus = READY_STATUS;
     private static String mPersistUnit = null;
 
     // Save UI elements when going to About screen
@@ -122,7 +125,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                                                             @Override
                                                             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
                                                             {
-                                                                sendIntentApi(ConstantUtils.INTENT_ACTION_SET_DIMENSION_PARAMETER, ConstantUtils.REPORT_IMAGE, isChecked);
+                                                                sendIntentApi(DimensioningConstants.INTENT_ACTION_SET_DIMENSION_PARAMETER, DimensioningConstants.REPORT_IMAGE, isChecked);
                                                             }
                                                         }
         );
@@ -133,7 +136,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
             @Override
             public void onClick(View v)
             {
-                callIntentApiForToggleSwitch(ConstantUtils.INCH);
+                callIntentApiForToggleSwitch(DimensioningConstants.INCH);
                 mTextViewInch.setBackground(mContext.getResources().getDrawable(R.drawable.selected_inch_bg, null));
                 mTextViewCm.setBackground(mContext.getResources().getDrawable(R.drawable.unselected_cm_bg, null));
             }
@@ -145,7 +148,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
             @Override
             public void onClick(View v)
             {
-                callIntentApiForToggleSwitch(ConstantUtils.CM);
+                callIntentApiForToggleSwitch(DimensioningConstants.CM);
                 mTextViewInch.setBackground(mContext.getResources().getDrawable(R.drawable.unselected_inch_bg, null));
                 mTextViewCm.setBackground(mContext.getResources().getDrawable(R.drawable.selected_cm_bg, null));
             }
@@ -159,7 +162,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                 Log.e(TAG, getResources().getString(R.string.reset_state));
                 mPersistValue = false;
                 Log.d(TAG, "Calling Get Dimension Intent ");
-                sendIntentApi(ConstantUtils.INTENT_ACTION_GET_DIMENSION_PARAMETER);
+                sendIntentApi(DimensioningConstants.INTENT_ACTION_GET_DIMENSION_PARAMETER);
             }
         });
 
@@ -171,8 +174,8 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                 String parcelID = mParcelID.getText().toString();
                 mParcelID.getText().clear();
                 Log.d(TAG, "boxID is: " + parcelID);
-                Log.e(TAG, ConstantUtils.START_DIMENSIONING);
-                sendIntentApi(ConstantUtils.INTENT_ACTION_GET_DIMENSION, ConstantUtils.PARCEL_ID, parcelID);
+                Log.d(TAG, "Start Dimensioning");
+                sendIntentApi(DimensioningConstants.INTENT_ACTION_GET_DIMENSION, DimensioningConstants.PARCEL_ID, parcelID);
             }
         });
 
@@ -206,13 +209,13 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                 Log.d(TAG, "BroadCastAuthenticator is successfully initialized");
                 try
                 {
-                    token = vIntentprotect.getToken(ConstantUtils.SERVICE_IDENTIFIER);
+                    token = vIntentprotect.getToken(DimensioningConstants.SERVICE_IDENTIFIER);
                     if (token != null && !token.isEmpty())
                     {
                         mTokenExpiration = Instant.now().plus(TOKEN_EXPIRATION_HOURS, ChronoUnit.HOURS);
                         if (isDimensioningServiceAvailable())
                         {
-                            sendIntentApi(ConstantUtils.INTENT_ACTION_ENABLE_DIMENSION, ENABLE_EXTRA_KEY, ENABLE_EXTRA_VALUE);
+                            sendIntentApi(DimensioningConstants.INTENT_ACTION_ENABLE_DIMENSION, DimensioningConstants.MODULE, DimensioningConstants.PARCEL_MODULE);
                         }
                         else
                         {
@@ -279,41 +282,41 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
         super.onActivityResult(requestCode, resultCode, intent);
         try
         {
-            if (requestCode == ConstantUtils.REQUEST_CODE)
+            if (requestCode == REQUEST_CODE)
             {
                 if (intent != null)
                 {
                     String actionName = intent.getAction();
-                    int dimResultCode = intent.getIntExtra(ConstantUtils.RESULT_CODE, ConstantUtils.FAIL);
-                    String dimResultMessage = intent.getStringExtra(ConstantUtils.RESULT_MESSAGE);
+                    int dimResultCode = intent.getIntExtra(DimensioningConstants.RESULT_CODE, DimensioningConstants.FAILURE);
+                    String dimResultMessage = intent.getStringExtra(DimensioningConstants.RESULT_MESSAGE);
                     if (dimResultMessage == null)
                         dimResultMessage = "";
                     Log.d(TAG, "onActivityResult: " + actionName + ", " + dimResultCode + ", " + dimResultMessage);
 
                     switch (actionName)
                     {
-                        case ConstantUtils.INTENT_ACTION_ENABLE_DIMENSION:
+                        case DimensioningConstants.INTENT_ACTION_ENABLE_DIMENSION:
                             try
                             {
-                                if (dimResultCode == ConstantUtils.SUCCESS)
+                                if (dimResultCode == DimensioningConstants.SUCCESS)
                                 {
                                     Bundle params = new Bundle();
                                     if (mReportImageCheckBox.isChecked())
                                     {
-                                        params.putBoolean(ConstantUtils.REPORT_IMAGE, true);
+                                        params.putBoolean(DimensioningConstants.REPORT_IMAGE, true);
                                     }
                                     if (mPersistUnit != null)
                                     {
-                                        params.putString(ConstantUtils.DIMENSIONING_UNIT, mPersistUnit);
+                                        params.putString(DimensioningConstants.DIMENSIONING_UNIT, mPersistUnit);
                                     }
 
                                     if (params.isEmpty())
                                     {
-                                        sendIntentApi(ConstantUtils.INTENT_ACTION_GET_DIMENSION_PARAMETER);
+                                        sendIntentApi(DimensioningConstants.INTENT_ACTION_GET_DIMENSION_PARAMETER);
                                     }
                                     else
                                     {
-                                        sendIntentApi(ConstantUtils.INTENT_ACTION_SET_DIMENSION_PARAMETER, params);
+                                        sendIntentApi(DimensioningConstants.INTENT_ACTION_SET_DIMENSION_PARAMETER, params);
                                     }
                                 }
                                 else
@@ -328,62 +331,62 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                             }
                             break;
 
-                        case ConstantUtils.INTENT_ACTION_GET_DIMENSION:
+                        case DimensioningConstants.INTENT_ACTION_GET_DIMENSION:
                             try
                             {
-                                if (dimResultCode == ConstantUtils.SUCCESS)
+                                if (dimResultCode == DimensioningConstants.SUCCESS)
                                 {
                                     BigDecimal length = new BigDecimal(0);
                                     BigDecimal width = new BigDecimal(0);
                                     BigDecimal height = new BigDecimal(0);
-                                    String lengthStatus = NO_DIM;
-                                    String widthStatus = NO_DIM;
-                                    String heightStatus = NO_DIM;
+                                    String lengthStatus = DimensioningConstants.NO_DIM;
+                                    String widthStatus = DimensioningConstants.NO_DIM;
+                                    String heightStatus = DimensioningConstants.NO_DIM;
                                     Instant timestamp = Instant.EPOCH;
 
                                     Bundle extras = intent.getExtras();
-                                    if (extras.containsKey(ConstantUtils.DIMENSIONING_UNIT))
+                                    if (extras.containsKey(DimensioningConstants.DIMENSIONING_UNIT))
                                     {
-                                        mUnit = intent.getStringExtra(ConstantUtils.DIMENSIONING_UNIT);
+                                        mUnit = intent.getStringExtra(DimensioningConstants.DIMENSIONING_UNIT);
                                     }
-                                    if (extras.containsKey(ConstantUtils.LENGTH))
+                                    if (extras.containsKey(DimensioningConstants.LENGTH))
                                     {
-                                        length = (BigDecimal) intent.getSerializableExtra(ConstantUtils.LENGTH);
+                                        length = (BigDecimal) intent.getSerializableExtra(DimensioningConstants.LENGTH);
                                     }
-                                    if (extras.containsKey(ConstantUtils.WIDTH))
+                                    if (extras.containsKey(DimensioningConstants.WIDTH))
                                     {
-                                        width = (BigDecimal) intent.getSerializableExtra(ConstantUtils.WIDTH);
+                                        width = (BigDecimal) intent.getSerializableExtra(DimensioningConstants.WIDTH);
                                     }
-                                    if (extras.containsKey(ConstantUtils.HEIGHT))
+                                    if (extras.containsKey(DimensioningConstants.HEIGHT))
                                     {
-                                        height = (BigDecimal) intent.getSerializableExtra(ConstantUtils.HEIGHT);
+                                        height = (BigDecimal) intent.getSerializableExtra(DimensioningConstants.HEIGHT);
                                     }
-                                    if (extras.containsKey(ConstantUtils.LENGTH_STATUS))
+                                    if (extras.containsKey(DimensioningConstants.LENGTH_STATUS))
                                     {
-                                        lengthStatus = intent.getStringExtra(ConstantUtils.LENGTH_STATUS);
+                                        lengthStatus = intent.getStringExtra(DimensioningConstants.LENGTH_STATUS);
                                     }
-                                    if (extras.containsKey(ConstantUtils.WIDTH_STATUS))
+                                    if (extras.containsKey(DimensioningConstants.WIDTH_STATUS))
                                     {
-                                        widthStatus = intent.getStringExtra(ConstantUtils.WIDTH_STATUS);
+                                        widthStatus = intent.getStringExtra(DimensioningConstants.WIDTH_STATUS);
                                     }
-                                    if (extras.containsKey(ConstantUtils.HEIGHT_STATUS))
+                                    if (extras.containsKey(DimensioningConstants.HEIGHT_STATUS))
                                     {
-                                        heightStatus = intent.getStringExtra(ConstantUtils.HEIGHT_STATUS);
+                                        heightStatus = intent.getStringExtra(DimensioningConstants.HEIGHT_STATUS);
                                     }
-                                    if (extras.containsKey(ConstantUtils.TIMESTAMP))
+                                    if (extras.containsKey(DimensioningConstants.TIMESTAMP))
                                     {
-                                        timestamp = (Instant) intent.getSerializableExtra(ConstantUtils.TIMESTAMP);
+                                        timestamp = (Instant) intent.getSerializableExtra(DimensioningConstants.TIMESTAMP);
                                         Log.d(TAG, "Time stamp is : " + timestamp);
                                     }
-                                    if (extras.containsKey(ConstantUtils.IMAGE))
+                                    if (extras.containsKey(DimensioningConstants.IMAGE))
                                     {
-                                        Bitmap bitmapImage = (Bitmap) intent.getParcelableExtra(ConstantUtils.IMAGE);
+                                        Bitmap bitmapImage = (Bitmap) intent.getParcelableExtra(DimensioningConstants.IMAGE);
                                         saveImage(bitmapImage, timestamp);
                                         Log.d(TAG, "bitmapImage is : " + bitmapImage);
                                     }
-                                    if (extras.containsKey(ConstantUtils.PARCEL_ID))
+                                    if (extras.containsKey(DimensioningConstants.PARCEL_ID))
                                     {
-                                        String PARCEL_ID = intent.getStringExtra(ConstantUtils.PARCEL_ID);
+                                        String PARCEL_ID = intent.getStringExtra(DimensioningConstants.PARCEL_ID);
                                         Log.d(TAG, "PARCEL_ID is : " + PARCEL_ID);
                                     }
 
@@ -392,13 +395,13 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                                 else
                                 {
                                     showDimensioningParameterStatus(mReadyLength, mReadyWidth, mReadyHeight,
-                                            ConstantUtils.READY_STATUS, ConstantUtils.READY_STATUS, ConstantUtils.READY_STATUS, mUnit);
+                                            READY_STATUS, READY_STATUS, READY_STATUS, mUnit);
                                 }
-                                if ((dimResultCode != ConstantUtils.SUCCESS) && (dimResultCode != ConstantUtils.CANCELED))
+                                if ((dimResultCode != DimensioningConstants.SUCCESS) && (dimResultCode != DimensioningConstants.CANCELED))
                                 {
                                     Toast.makeText(this, dimResultMessage, Toast.LENGTH_SHORT).show();
                                     disableStartDimensioningButton();
-                                    sendIntentApi(ConstantUtils.INTENT_ACTION_DISABLE_DIMENSION, ENABLE_EXTRA_KEY, ENABLE_EXTRA_VALUE);
+                                    sendIntentApi(DimensioningConstants.INTENT_ACTION_DISABLE_DIMENSION, DimensioningConstants.MODULE, DimensioningConstants.PARCEL_MODULE);
                                 }
                             }
                             catch (Exception e)
@@ -407,61 +410,61 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                             }
                             break;
 
-                        case ConstantUtils.INTENT_ACTION_GET_DIMENSION_PARAMETER:
+                        case DimensioningConstants.INTENT_ACTION_GET_DIMENSION_PARAMETER:
                             try
                             {
-                                if (dimResultCode == ConstantUtils.SUCCESS)
+                                if (dimResultCode == DimensioningConstants.SUCCESS)
                                 {
                                     Bundle extras = intent.getExtras();
-                                    if (extras.containsKey(ConstantUtils.READY_LENGTH))
+                                    if (extras.containsKey(DimensioningConstants.READY_LENGTH))
                                     {
-                                        mReadyLength = (BigDecimal) intent.getSerializableExtra(ConstantUtils.READY_LENGTH);
+                                        mReadyLength = (BigDecimal) intent.getSerializableExtra(DimensioningConstants.READY_LENGTH);
                                         Log.d(TAG, "Get Dimension Parameter Result mReadyLength: " + mReadyLength);
                                     }
-                                    if (extras.containsKey(ConstantUtils.READY_WIDTH))
+                                    if (extras.containsKey(DimensioningConstants.READY_WIDTH))
                                     {
-                                        mReadyWidth = (BigDecimal) intent.getSerializableExtra(ConstantUtils.READY_WIDTH);
+                                        mReadyWidth = (BigDecimal) intent.getSerializableExtra(DimensioningConstants.READY_WIDTH);
                                         Log.d(TAG, "Get Dimension Parameter Result mReadyWidth: " + mReadyWidth);
                                     }
-                                    if (extras.containsKey(ConstantUtils.READY_HEIGHT))
+                                    if (extras.containsKey(DimensioningConstants.READY_HEIGHT))
                                     {
-                                        mReadyHeight = (BigDecimal) intent.getSerializableExtra(ConstantUtils.READY_HEIGHT);
+                                        mReadyHeight = (BigDecimal) intent.getSerializableExtra(DimensioningConstants.READY_HEIGHT);
                                         Log.d(TAG, "Get Dimension Parameter Result mReadyHeight: " + mReadyHeight);
                                     }
-                                    if (extras.containsKey(ConstantUtils.DIMENSIONING_UNIT))
+                                    if (extras.containsKey(DimensioningConstants.DIMENSIONING_UNIT))
                                     {
-                                        mUnit = intent.getStringExtra(ConstantUtils.DIMENSIONING_UNIT);
+                                        mUnit = intent.getStringExtra(DimensioningConstants.DIMENSIONING_UNIT);
                                         Log.d(TAG, "Get Dimension Parameter Result mUnit : " + mUnit);
                                     }
-                                    if (extras.containsKey(ConstantUtils.BUNDLE_VERSION))
+                                    if (extras.containsKey(DimensioningConstants.BUNDLE_VERSION))
                                     {
-                                        mBundleVersion = intent.getStringExtra(ConstantUtils.BUNDLE_VERSION);
+                                        mBundleVersion = intent.getStringExtra(DimensioningConstants.BUNDLE_VERSION);
                                         Log.d(TAG, "Get Dimension Parameter Result mBundleVersion: " + mBundleVersion);
                                     }
-                                    if (extras.containsKey(ConstantUtils.FRAMEWORK_VERSION))
+                                    if (extras.containsKey(DimensioningConstants.FRAMEWORK_VERSION))
                                     {
-                                        mFrameworkVersion = intent.getStringExtra(ConstantUtils.FRAMEWORK_VERSION);
+                                        mFrameworkVersion = intent.getStringExtra(DimensioningConstants.FRAMEWORK_VERSION);
                                         Log.d(TAG, "Get Dimension Parameter Result mFrameworkVersion: " + mFrameworkVersion);
                                     }
-                                    if (extras.containsKey(ConstantUtils.SERVICE_VERSION))
+                                    if (extras.containsKey(DimensioningConstants.SERVICE_VERSION))
                                     {
-                                        mServiceVersion = intent.getStringExtra(ConstantUtils.SERVICE_VERSION);
+                                        mServiceVersion = intent.getStringExtra(DimensioningConstants.SERVICE_VERSION);
                                         Log.d(TAG, "Get Dimension Parameter Result mServiceVersion: " + mServiceVersion);
                                     }
-                                    if (extras.containsKey(ConstantUtils.SUPPORTED_UNITS))
+                                    if (extras.containsKey(DimensioningConstants.SUPPORTED_UNITS))
                                     {
-                                        String[] supportedUnits = intent.getStringArrayExtra(ConstantUtils.SUPPORTED_UNITS);
+                                        String[] supportedUnits = intent.getStringArrayExtra(DimensioningConstants.SUPPORTED_UNITS);
                                         updateUnitSwitch(supportedUnits);
                                         Log.d(TAG, "Get Dimension Parameter Result supportedUnits: " + Arrays.toString(supportedUnits));
                                     }
-                                    if (extras.containsKey(ConstantUtils.REGULATORY_APPROVAL))
+                                    if (extras.containsKey(DimensioningConstants.REGULATORY_APPROVAL))
                                     {
-                                        mRegulatoryApproval = intent.getStringExtra(ConstantUtils.REGULATORY_APPROVAL);
+                                        mRegulatoryApproval = intent.getStringExtra(DimensioningConstants.REGULATORY_APPROVAL);
                                         Log.d(TAG, "Get Dimension Parameter Result mRegulatoryApproval: " + mRegulatoryApproval);
                                     }
-                                    if (extras.containsKey(ConstantUtils.REPORT_IMAGE))
+                                    if (extras.containsKey(DimensioningConstants.REPORT_IMAGE))
                                     {
-                                        boolean reportImage = intent.getBooleanExtra(ConstantUtils.REPORT_IMAGE, false);
+                                        boolean reportImage = intent.getBooleanExtra(DimensioningConstants.REPORT_IMAGE, false);
                                         Log.d(TAG, "Get Dimension Parameter Result reportImage: " + reportImage);
                                     }
                                     if (mPersistValue && mPersistUnit != null)
@@ -472,7 +475,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                                     else
                                     {
                                         showDimensioningParameterStatus(mReadyLength, mReadyWidth, mReadyHeight,
-                                                ConstantUtils.READY_STATUS, ConstantUtils.READY_STATUS, ConstantUtils.READY_STATUS, mUnit);
+                                                READY_STATUS, READY_STATUS, READY_STATUS, mUnit);
                                     }
 
                                     enableStartDimensioningButton();
@@ -481,7 +484,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                                 {
                                     Toast.makeText(this, dimResultMessage, Toast.LENGTH_SHORT).show();
                                     disableStartDimensioningButton();
-                                    sendIntentApi(ConstantUtils.INTENT_ACTION_DISABLE_DIMENSION, ENABLE_EXTRA_KEY, ENABLE_EXTRA_VALUE);
+                                    sendIntentApi(DimensioningConstants.INTENT_ACTION_DISABLE_DIMENSION, DimensioningConstants.MODULE, DimensioningConstants.PARCEL_MODULE);
                                 }
                             }
                             catch (Exception e)
@@ -489,19 +492,19 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                                 Log.d(TAG, "Exception : " + e);
                             }
                             break;
-                        case ConstantUtils.INTENT_ACTION_SET_DIMENSION_PARAMETER:
+                        case DimensioningConstants.INTENT_ACTION_SET_DIMENSION_PARAMETER:
                             try
                             {
-                                if (dimResultCode == ConstantUtils.SUCCESS)
+                                if (dimResultCode == DimensioningConstants.SUCCESS)
                                 {
                                     //Below Intent is called to update the ready values everytime the switch is toggled
-                                    sendIntentApi(ConstantUtils.INTENT_ACTION_GET_DIMENSION_PARAMETER);
+                                    sendIntentApi(DimensioningConstants.INTENT_ACTION_GET_DIMENSION_PARAMETER);
                                 }
                                 else
                                 {
                                     Toast.makeText(this, dimResultMessage, Toast.LENGTH_SHORT).show();
                                     disableStartDimensioningButton();
-                                    sendIntentApi(ConstantUtils.INTENT_ACTION_DISABLE_DIMENSION, ENABLE_EXTRA_KEY, ENABLE_EXTRA_VALUE);
+                                    sendIntentApi(DimensioningConstants.INTENT_ACTION_DISABLE_DIMENSION, DimensioningConstants.MODULE, DimensioningConstants.PARCEL_MODULE);
                                 }
                             }
                             catch (Exception e)
@@ -509,10 +512,10 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                                 Log.d(TAG, "Exception : " + e);
                             }
                             break;
-                        case ConstantUtils.INTENT_ACTION_DISABLE_DIMENSION:
+                        case DimensioningConstants.INTENT_ACTION_DISABLE_DIMENSION:
                             try
                             {
-                                if (dimResultCode != ConstantUtils.SUCCESS)
+                                if (dimResultCode != DimensioningConstants.SUCCESS)
                                 {
                                     Toast.makeText(this, dimResultMessage, Toast.LENGTH_SHORT).show();
                                 }
@@ -572,7 +575,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
 
         IntentFilter filter = new IntentFilter();
         filter.addCategory(Intent.CATEGORY_DEFAULT);
-        filter.addAction(ConstantUtils.DATA_WEDGE_INTENT_ACTION_SCANNING_RESULT);
+        filter.addAction(DATA_WEDGE_INTENT_ACTION_SCANNING_RESULT);
         registerReceiver(datawedgeBroadcastReceiver, filter);
     }
 
@@ -585,8 +588,8 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
     {
         Log.e(TAG, getResources().getString(R.string.state_changes));
         mPersistValue = false;
-        sendIntentApi(ConstantUtils.INTENT_ACTION_SET_DIMENSION_PARAMETER,
-                ConstantUtils.DIMENSIONING_UNIT, selectedUnit);
+        sendIntentApi(DimensioningConstants.INTENT_ACTION_SET_DIMENSION_PARAMETER,
+                DimensioningConstants.DIMENSIONING_UNIT, selectedUnit);
         Log.d(TAG, "Calling Set Dimension Parameter Intent selectedUnit = " + selectedUnit);
     }
 
@@ -606,7 +609,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                                                 final BigDecimal height, String mLengthStatus,
                                                 String mWidthStatus, String mHeightStatus, String unit)
     {
-        String uiUnit = (unit.equalsIgnoreCase(ConstantUtils.INCH) ? ConstantUtils.IN : unit.toLowerCase());
+        String uiUnit = (unit.equalsIgnoreCase(DimensioningConstants.INCH) ? IN : unit.toLowerCase());
 
         String dimensionLength = length.toString() + uiUnit;
         mTxtLength.setText(dimensionLength);
@@ -624,75 +627,75 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
         mPersistUnit = unit;
         mPersistValue = true;
 
-        if (unit.equalsIgnoreCase(ConstantUtils.CM))
+        if (unit.equalsIgnoreCase(DimensioningConstants.CM))
         {
             mTextViewInch.setBackground(mContext.getResources().getDrawable(R.drawable.unselected_inch_bg, null));
             mTextViewCm.setBackground(mContext.getResources().getDrawable(R.drawable.selected_cm_bg, null));
         }
-        else if (unit.equalsIgnoreCase(ConstantUtils.INCH))
+        else if (unit.equalsIgnoreCase(DimensioningConstants.INCH))
         {
             mTextViewInch.setBackground(mContext.getResources().getDrawable(R.drawable.selected_inch_bg, null));
             mTextViewCm.setBackground(mContext.getResources().getDrawable(R.drawable.unselected_cm_bg, null));
         }
 
-        if (mWidthStatus.equalsIgnoreCase(NO_DIM) || mHeightStatus.equalsIgnoreCase(NO_DIM) ||
-                mLengthStatus.equalsIgnoreCase(NO_DIM))
+        if (mWidthStatus.equalsIgnoreCase(DimensioningConstants.NO_DIM) || mHeightStatus.equalsIgnoreCase(DimensioningConstants.NO_DIM) ||
+                mLengthStatus.equalsIgnoreCase(DimensioningConstants.NO_DIM))
         {
-            mTxtLength.setText(NO_DIM);
+            mTxtLength.setText(DimensioningConstants.NO_DIM);
             mLayoutLength.setBackground(mContext.getResources().getDrawable(R.drawable.red_background, null));
             mTextViewLengthIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.warning_red, 0);
-            mTxtWidth.setText(NO_DIM);
+            mTxtWidth.setText(DimensioningConstants.NO_DIM);
             mLayoutWidth.setBackground(mContext.getResources().getDrawable(R.drawable.red_background, null));
             mTextViewWidthIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.warning_red, 0);
-            mTxtHeight.setText(NO_DIM);
+            mTxtHeight.setText(DimensioningConstants.NO_DIM);
             mLayoutHeight.setBackground(mContext.getResources().getDrawable(R.drawable.red_background, null));
             mTextViewHeightIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.warning_red, 0);
         }
         else
         {
-            if (mLengthStatus.equalsIgnoreCase(ConstantUtils.ABOVE_RANGE) || mLengthStatus.equalsIgnoreCase(ConstantUtils.BELOW_RANGE))
+            if (mLengthStatus.equalsIgnoreCase(DimensioningConstants.ABOVE_RANGE) || mLengthStatus.equalsIgnoreCase(DimensioningConstants.BELOW_RANGE))
             {
                 mLayoutLength.setBackground(mContext.getResources().getDrawable(R.drawable.orange_background, null));
                 mTextViewLengthIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.warning, 0);
             }
-            else if (mLengthStatus.equalsIgnoreCase(ConstantUtils.IN_RANGE))
+            else if (mLengthStatus.equalsIgnoreCase(DimensioningConstants.IN_RANGE))
             {
                 mLayoutLength.setBackground(mContext.getResources().getDrawable(R.drawable.green_background, null));
                 mTextViewLengthIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check, 0);
             }
-            else if (mLengthStatus.equalsIgnoreCase(ConstantUtils.READY_STATUS))
+            else if (mLengthStatus.equalsIgnoreCase(READY_STATUS))
             {
                 mLayoutLength.setBackground(mContext.getResources().getDrawable(R.drawable.box, null));
                 mTextViewLengthIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             }
 
-            if (mWidthStatus.equalsIgnoreCase(ConstantUtils.ABOVE_RANGE) || mWidthStatus.equalsIgnoreCase(ConstantUtils.BELOW_RANGE))
+            if (mWidthStatus.equalsIgnoreCase(DimensioningConstants.ABOVE_RANGE) || mWidthStatus.equalsIgnoreCase(DimensioningConstants.BELOW_RANGE))
             {
                 mLayoutWidth.setBackground(mContext.getResources().getDrawable(R.drawable.orange_background, null));
                 mTextViewWidthIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.warning, 0);
             }
-            else if (mWidthStatus.equalsIgnoreCase(ConstantUtils.IN_RANGE))
+            else if (mWidthStatus.equalsIgnoreCase(DimensioningConstants.IN_RANGE))
             {
                 mLayoutWidth.setBackground(mContext.getResources().getDrawable(R.drawable.green_background, null));
                 mTextViewWidthIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check, 0);
             }
-            else if (mWidthStatus.equalsIgnoreCase(ConstantUtils.READY_STATUS))
+            else if (mWidthStatus.equalsIgnoreCase(READY_STATUS))
             {
                 mLayoutWidth.setBackground(mContext.getResources().getDrawable(R.drawable.box, null));
                 mTextViewWidthIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             }
 
-            if (mHeightStatus.equalsIgnoreCase(ConstantUtils.ABOVE_RANGE) || mHeightStatus.equalsIgnoreCase(ConstantUtils.BELOW_RANGE))
+            if (mHeightStatus.equalsIgnoreCase(DimensioningConstants.ABOVE_RANGE) || mHeightStatus.equalsIgnoreCase(DimensioningConstants.BELOW_RANGE))
             {
                 mLayoutHeight.setBackground(mContext.getResources().getDrawable(R.drawable.orange_background, null));
                 mTextViewHeightIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.warning, 0);
             }
-            else if (mHeightStatus.equalsIgnoreCase(ConstantUtils.IN_RANGE))
+            else if (mHeightStatus.equalsIgnoreCase(DimensioningConstants.IN_RANGE))
             {
                 mLayoutHeight.setBackground(mContext.getResources().getDrawable(R.drawable.green_background, null));
                 mTextViewHeightIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check, 0);
             }
-            else if (mHeightStatus.equalsIgnoreCase(ConstantUtils.READY_STATUS))
+            else if (mHeightStatus.equalsIgnoreCase(READY_STATUS))
             {
                 mLayoutHeight.setBackground(mContext.getResources().getDrawable(R.drawable.box, null));
                 mTextViewHeightIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
@@ -765,21 +768,21 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
         Log.d(TAG, "sendIntentApi " + action);
         Intent intent = new Intent();
         intent.setAction(action);
-        intent.setPackage(ConstantUtils.CMP_PACKAGE);
-        intent.putExtra(ConstantUtils.PACKAGE_NAME, getPackageName());
-        intent.putExtra(ConstantUtils.API_TOKEN, token);
+        intent.setPackage(DimensioningConstants.ZEBRA_DIMENSIONING_PACKAGE);
+        intent.putExtra(DimensioningConstants.APPLICATION_PACKAGE, getPackageName());
+        intent.putExtra(DimensioningConstants.TOKEN, token);
 
         if (extras != null)
         {
             intent.putExtras(extras);
         }
 
-        PendingIntent lobPendingIntent = createPendingResult(ConstantUtils.REQUEST_CODE, new Intent(),
+        PendingIntent lobPendingIntent = createPendingResult(REQUEST_CODE, new Intent(),
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        intent.putExtra(ConstantUtils.CALLBACK_RESPONSE, lobPendingIntent);
+        intent.putExtra(DimensioningConstants.CALLBACK_RESPONSE, lobPendingIntent);
 
-        if (intent.getAction().equals(ConstantUtils.INTENT_ACTION_ENABLE_DIMENSION))
+        if (intent.getAction().equals(DimensioningConstants.INTENT_ACTION_ENABLE_DIMENSION))
         {
             startForegroundService(intent);
         }
@@ -806,7 +809,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
      */
     private void displayScanResult(Intent initiatingIntent)
     {
-        String decodedData = initiatingIntent.getStringExtra(ConstantUtils.DATA_WEDGE_INTENT_DATA_KEY);
+        String decodedData = initiatingIntent.getStringExtra(DATA_WEDGE_INTENT_DATA_KEY);
         mParcelID.getText().clear();
         mParcelID.setText(decodedData);
     }
@@ -819,7 +822,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
             String action = intent.getAction();
             intent.getExtras();
 
-            if (action.equals(ConstantUtils.DATA_WEDGE_INTENT_ACTION_SCANNING_RESULT))
+            if (action.equals(DATA_WEDGE_INTENT_ACTION_SCANNING_RESULT))
             {
                 try
                 {
@@ -842,7 +845,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
         {
             try
             {
-                if (applicationInfo.packageName.equals(ConstantUtils.CMP_PACKAGE))
+                if (applicationInfo.packageName.equals(DimensioningConstants.ZEBRA_DIMENSIONING_PACKAGE))
                 {
                     Log.d(TAG, "checkInstalledApplications : packageName : " + applicationInfo.packageName);
                     return true;
@@ -869,7 +872,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
         else
         {
             mPersistValue = false;
-            sendIntentApi(ConstantUtils.INTENT_ACTION_DISABLE_DIMENSION);
+            sendIntentApi(DimensioningConstants.INTENT_ACTION_DISABLE_DIMENSION);
             super.onBackPressed();
         }
     }
@@ -905,7 +908,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
             }
             else
             {
-                sendIntentApi(ConstantUtils.INTENT_ACTION_ENABLE_DIMENSION, ENABLE_EXTRA_KEY, ENABLE_EXTRA_VALUE);
+                sendIntentApi(DimensioningConstants.INTENT_ACTION_ENABLE_DIMENSION, DimensioningConstants.MODULE, DimensioningConstants.PARCEL_MODULE);
             }
         }
         if (mPersistImage)
@@ -945,7 +948,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
     protected void onStop()
     {
         Log.d(TAG, "onStop()");
-        sendIntentApi(ConstantUtils.INTENT_ACTION_DISABLE_DIMENSION);
+        sendIntentApi(DimensioningConstants.INTENT_ACTION_DISABLE_DIMENSION);
         super.onStop();
     }
 
@@ -975,7 +978,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
     private void setDataWedgeProfile()
     {
         Bundle mainBundle = new Bundle();
-        mainBundle.putString("PROFILE_NAME", ConstantUtils.DATA_WEDGE_PROFILE_NAME);
+        mainBundle.putString("PROFILE_NAME", DATA_WEDGE_PROFILE_NAME);
         mainBundle.putString("PROFILE_ENABLED", "true");
         mainBundle.putString("CONFIG_MODE", "CREATE_IF_NOT_EXIST");
 
@@ -990,7 +993,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
 
         Bundle intentConfigParams = new Bundle();
         intentConfigParams.putString("intent_output_enabled", "true");
-        intentConfigParams.putString("intent_action", ConstantUtils.DATA_WEDGE_INTENT_ACTION_SCANNING_RESULT);
+        intentConfigParams.putString("intent_action", DATA_WEDGE_INTENT_ACTION_SCANNING_RESULT);
         intentConfigParams.putInt("intent_delivery", 2);
 
         intentPluginConfig.putBundle("PARAM_LIST", intentConfigParams);
@@ -1014,7 +1017,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
 
         Intent switchProfileIntent = new Intent();
         switchProfileIntent.setAction("com.symbol.datawedge.api.ACTION");
-        switchProfileIntent.putExtra("com.symbol.datawedge.api.SWITCH_TO_PROFILE", ConstantUtils.DATA_WEDGE_PROFILE_NAME);
+        switchProfileIntent.putExtra("com.symbol.datawedge.api.SWITCH_TO_PROFILE", DATA_WEDGE_PROFILE_NAME);
 
         sendBroadcast(switchProfileIntent);
     }

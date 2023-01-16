@@ -28,10 +28,10 @@ public class ApplicationDimensioningClient extends Application
         if (DimensioningClientApp.token != null && !DimensioningClientApp.token.isEmpty())
         {
             Intent intent = new Intent();
-            intent.setAction(ConstantUtils.INTENT_ACTION_DISABLE_DIMENSION);
-            intent.setPackage(ConstantUtils.CMP_PACKAGE);
-            intent.putExtra(ConstantUtils.PACKAGE_NAME, getPackageName());
-            intent.putExtra(ConstantUtils.API_TOKEN, DimensioningClientApp.token);
+            intent.setAction(DimensioningConstants.INTENT_ACTION_DISABLE_DIMENSION);
+            intent.setPackage(DimensioningConstants.ZEBRA_DIMENSIONING_PACKAGE);
+            intent.putExtra(DimensioningConstants.APPLICATION_PACKAGE, getPackageName());
+            intent.putExtra(DimensioningConstants.TOKEN, DimensioningClientApp.token);
             sendBroadcast(intent);
         }
         Log.d(TAG, "handleUncaughtException stop :");

@@ -20,7 +20,7 @@ public class DimensioningClientBroadcast extends BroadcastReceiver
 
         if (actionName != null)
         {
-            if (actionName.equals(ConstantUtils.INTENT_ACTION_SDK_APPLICATION_CRASH))
+            if (actionName.equals(DimensioningConstants.INTENT_ACTION_APPLICATION_CRASH))
             {
                 Log.d(TAG, "onReceive() SDK crash");
                 Toast.makeText(context.getApplicationContext(), String.valueOf(R.string.SDK_service_crashed), Toast.LENGTH_SHORT).show();
