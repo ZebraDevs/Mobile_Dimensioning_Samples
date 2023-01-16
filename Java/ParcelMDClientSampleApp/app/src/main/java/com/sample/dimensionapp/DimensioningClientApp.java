@@ -176,6 +176,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                 Log.d(TAG, "boxID is: " + parcelID);
                 Log.d(TAG, "Start Dimensioning");
                 sendIntentApi(DimensioningConstants.INTENT_ACTION_GET_DIMENSION, DimensioningConstants.PARCEL_ID, parcelID);
+                disableStartDimensioningButton();
             }
         });
 
@@ -402,6 +403,10 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                                     Toast.makeText(this, dimResultMessage, Toast.LENGTH_SHORT).show();
                                     disableStartDimensioningButton();
                                     sendIntentApi(DimensioningConstants.INTENT_ACTION_DISABLE_DIMENSION, DimensioningConstants.MODULE, DimensioningConstants.PARCEL_MODULE);
+                                }
+                                else
+                                {
+                                    enableStartDimensioningButton();
                                 }
                             }
                             catch (Exception e)
