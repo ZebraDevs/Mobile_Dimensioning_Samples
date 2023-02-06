@@ -7,15 +7,12 @@
     <string name="start_dimensioning">Empezar a dimensionar</string>
     <string name="scan_barcode">Escanear código de barras</string>
     <string name="reset_data">RESTABLECER</string>
-    <string name="state_changes">Cambios de estado </string>
-    <string name="reset_state">Restablecer</string>
-    <string name="set_dimensioning_parameter">Definir parámetro de dimensión</string>
     <string name="navigation_drawer_home">Inicio</string>
     <string name="navigation_drawer_about">Acerca de</string>
+    <string name="app_version">Versión de la aplicación: </string>
     <string name="bundle_version">Versión de Bundle: </string>
     <string name="framework_version">Framework Version: </string>
     <string name="service_version">Versión del servicio: </string>
-    <string name="regulatory_approval">"Aprobación regulatoria: "</string>
     <string name="copyrights">© 2021 Zebra Technologies Corp \n Todos los derechos reservados.</string>
     <!--to toggle the open close button
     of the navigation drawer-->
@@ -25,12 +22,12 @@
     <!-- String use to inform SDK crash -->
     <string name="SDK_service_crashed">El servicio SDK se bloqueó</string>
     <string name="dimensioning_service_availability_check">Servicio de dimensionamiento no disponible</string>
-    <string name="app_version">Versión de la aplicación: </string>
 
-    <!-- String use to inform about permission -->
-    <string name="parcel_config_file_not_found">Archivo de configuración de parcela no encontrado</string>
-    <string name="permission_granted">Permiso concedido</string>
     <string name="permission_not_granted">Permiso no concedido</string>
 
     <string name="save_image">Guardar Imagen</string>
+
+    <string name="box_length">Larga:</string>
+    <string name="box_width">Ancho:</string>
+    <string name="box_height">Altura:</string>
 </resources>

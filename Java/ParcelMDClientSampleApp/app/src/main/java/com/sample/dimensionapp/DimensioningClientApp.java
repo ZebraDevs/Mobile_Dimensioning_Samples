@@ -159,7 +159,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
             @Override
             public void onClick(View view)
             {
-                Log.e(TAG, getResources().getString(R.string.reset_state));
+                Log.e(TAG, "Reset");
                 mPersistValue = false;
                 Log.d(TAG, "Calling Get Dimension Intent ");
                 sendIntentApi(DimensioningConstants.INTENT_ACTION_GET_DIMENSION_PARAMETER);
@@ -220,7 +220,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                         }
                         else
                         {
-                            Log.e(TAG, getResources().getString(R.string.dimensioning_service_availability_check));
+                            Log.e(TAG, "Dimensioning service not available");
                             runOnUiThread(new Runnable()
                             {
                                 public void run()
@@ -237,7 +237,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                         {
                             public void run()
                             {
-                                Toast.makeText(mContext, "Access Denied", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, getResources().getString(R.string.permission_not_granted), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -249,7 +249,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                     {
                         public void run()
                         {
-                            Toast.makeText(mContext, "Access Denied", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, getResources().getString(R.string.permission_not_granted), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -591,7 +591,6 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
      */
     public void callIntentApiForToggleSwitch(String selectedUnit)
     {
-        Log.e(TAG, getResources().getString(R.string.state_changes));
         mPersistValue = false;
         sendIntentApi(DimensioningConstants.INTENT_ACTION_SET_DIMENSION_PARAMETER,
                 DimensioningConstants.DIMENSIONING_UNIT, selectedUnit);

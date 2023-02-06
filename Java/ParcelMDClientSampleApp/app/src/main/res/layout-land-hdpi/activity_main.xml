@@ -204,7 +204,7 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Length: "
+                        android:text="@string/box_length"
                         android:editable="false"
                         android:layout_marginLeft="5dp"
                         android:textSize="9dp"
@@ -247,7 +247,7 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Width: "
+                        android:text="@string/box_width"
                         android:editable="false"
                         android:layout_marginLeft="5dp"
                         android:textSize="9dp"
@@ -292,7 +292,7 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Height: "
+                        android:text="@string/box_height"
                         android:editable="false"
                         android:layout_marginLeft="5dp"
                         android:textSize="9dp"

@@ -7,15 +7,12 @@
     <string name="start_dimensioning">Messung starten</string>
     <string name="scan_barcode">Barcode scannen</string>
     <string name="reset_data">ZURÜCKSETZEN</string>
-    <string name="state_changes">Statusänderungen </string>
-    <string name="reset_state">Zurücksetzen</string>
-    <string name="set_dimensioning_parameter">Messparameter Festlegen</string>
     <string name="navigation_drawer_home">Start</string>
     <string name="navigation_drawer_about">Info</string>
+    <string name="app_version">Anwendung Ausführung: </string>
     <string name="bundle_version">Bundle Version: </string>
     <string name="framework_version">Framework Version: </string>
     <string name="service_version">Serviceversion: </string>
-    <string name="regulatory_approval">"Behördliche Genehmigung: "</string>
     <string name="copyrights">© 2021 Zebra Technologies Corp \n Alle Rechte vorbehalten.</string>
     <!--to toggle the open close button
     of the navigation drawer-->
@@ -26,12 +23,11 @@
     <string name="SDK_service_crashed">SDK-Dienst abgestürzt</string>
     <string name="dimensioning_service_availability_check">Bemaßungsservice nicht verfügbar</string>
 
-    <string name="app_version">Anwendung Ausführung: </string>
-
-    <!-- String use to inform about permission -->
-    <string name="parcel_config_file_not_found">Paketkonfigurationsdatei nicht gefunden</string>
-    <string name="permission_granted">Erlaubnis erteilt</string>
     <string name="permission_not_granted">Erlaubnis nicht erteilt</string>
 
     <string name="save_image">Bild speichern</string>
+
+    <string name="box_length">Länge:</string>
+    <string name="box_width">Breite:</string>
+    <string name="box_height">Höhe:</string>
 </resources>

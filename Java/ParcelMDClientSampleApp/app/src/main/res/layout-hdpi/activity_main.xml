@@ -228,7 +228,7 @@
                                 android:id="@+id/lengthTextView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Length:        "
+                                android:text="@string/box_length"
                                 android:editable="false"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginTop="2dp"
@@ -298,7 +298,7 @@
                                 android:id="@+id/widthTextView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Width:        "
+                                android:text="@string/box_width"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginTop="2dp"
                                 android:textSize="10dp"
@@ -368,7 +368,7 @@
                                 android:id="@+id/heightTextView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Height:        "
+                                android:text="@string/box_height"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginTop="2dp"
                                 android:textSize="10dp"
@@ -432,6 +432,7 @@
                     android:textSize="18dp"
                     android:clickable="false"
                     android:enabled="false"
+                    android:singleLine="true"
                     app:backgroundTint="#808080" />
 
         </LinearLayout>
