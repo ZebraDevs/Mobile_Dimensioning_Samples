@@ -3,9 +3,6 @@
         xmlns:tools="http://schemas.android.com/tools"
         package="com.sample.dimensionapp">
 
-    <uses-permission
-            android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
-            tools:ignore="ScopedStorage" />
     <queries>
         <package android:name="com.zebra.dimensioning" />
     </queries>
@@ -15,7 +12,6 @@
             android:allowBackup="false"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
-            android:requestLegacyExternalStorage="true"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:testOnly="false"
