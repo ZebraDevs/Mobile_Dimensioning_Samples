@@ -600,9 +600,9 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
         mParcelID = findViewById(R.id.editTextBoxID);
         mStartDimensioningButton = findViewById(R.id.button);
         mScanBarcodeButton = findViewById(R.id.buttonScanBarcode);
-        mLayoutLength = findViewById(R.id.linearlayoutLength);
-        mLayoutWidth = findViewById(R.id.linearlayoutWidth);
-        mLayoutHeight = findViewById(R.id.linearlayoutHeight);
+        mLayoutLength = findViewById(R.id.frameLayoutLength);
+        mLayoutWidth = findViewById(R.id.frameLayoutWidth);
+        mLayoutHeight = findViewById(R.id.frameLayoutHeight);
         mReportImageCheckBox = findViewById(R.id.checkBoxReportImage);
 
         IntentFilter filter = new IntentFilter();
@@ -677,25 +677,25 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
         {
             mTxtLength.setText(DimensioningConstants.NO_DIM);
             mLayoutLength.setBackground(mContext.getResources().getDrawable(R.drawable.red_background, null));
-            mTextViewLengthIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.warning_red, 0);
+            mTextViewLengthIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_error, 0);
             mTxtWidth.setText(DimensioningConstants.NO_DIM);
             mLayoutWidth.setBackground(mContext.getResources().getDrawable(R.drawable.red_background, null));
-            mTextViewWidthIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.warning_red, 0);
+            mTextViewWidthIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_error, 0);
             mTxtHeight.setText(DimensioningConstants.NO_DIM);
             mLayoutHeight.setBackground(mContext.getResources().getDrawable(R.drawable.red_background, null));
-            mTextViewHeightIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.warning_red, 0);
+            mTextViewHeightIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_error, 0);
         }
         else
         {
             if (mLengthStatus.equalsIgnoreCase(DimensioningConstants.ABOVE_RANGE) || mLengthStatus.equalsIgnoreCase(DimensioningConstants.BELOW_RANGE))
             {
                 mLayoutLength.setBackground(mContext.getResources().getDrawable(R.drawable.orange_background, null));
-                mTextViewLengthIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.warning, 0);
+                mTextViewLengthIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_warning_out_of_range, 0);
             }
             else if (mLengthStatus.equalsIgnoreCase(DimensioningConstants.IN_RANGE))
             {
                 mLayoutLength.setBackground(mContext.getResources().getDrawable(R.drawable.green_background, null));
-                mTextViewLengthIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check, 0);
+                mTextViewLengthIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check, 0);
             }
             else if (mLengthStatus.equalsIgnoreCase(READY_STATUS))
             {
@@ -706,12 +706,12 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
             if (mWidthStatus.equalsIgnoreCase(DimensioningConstants.ABOVE_RANGE) || mWidthStatus.equalsIgnoreCase(DimensioningConstants.BELOW_RANGE))
             {
                 mLayoutWidth.setBackground(mContext.getResources().getDrawable(R.drawable.orange_background, null));
-                mTextViewWidthIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.warning, 0);
+                mTextViewWidthIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_warning_out_of_range, 0);
             }
             else if (mWidthStatus.equalsIgnoreCase(DimensioningConstants.IN_RANGE))
             {
                 mLayoutWidth.setBackground(mContext.getResources().getDrawable(R.drawable.green_background, null));
-                mTextViewWidthIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check, 0);
+                mTextViewWidthIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check, 0);
             }
             else if (mWidthStatus.equalsIgnoreCase(READY_STATUS))
             {
@@ -722,12 +722,12 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
             if (mHeightStatus.equalsIgnoreCase(DimensioningConstants.ABOVE_RANGE) || mHeightStatus.equalsIgnoreCase(DimensioningConstants.BELOW_RANGE))
             {
                 mLayoutHeight.setBackground(mContext.getResources().getDrawable(R.drawable.orange_background, null));
-                mTextViewHeightIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.warning, 0);
+                mTextViewHeightIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_warning_out_of_range, 0);
             }
             else if (mHeightStatus.equalsIgnoreCase(DimensioningConstants.IN_RANGE))
             {
                 mLayoutHeight.setBackground(mContext.getResources().getDrawable(R.drawable.green_background, null));
-                mTextViewHeightIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check, 0);
+                mTextViewHeightIcon.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check, 0);
             }
             else if (mHeightStatus.equalsIgnoreCase(READY_STATUS))
             {

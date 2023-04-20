@@ -7,29 +7,29 @@
         android:id="@+id/my_drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="false"
         tools:context=".DimensioningClientApp"
-        tools:ignore="HardcodedText"
-        android:fitsSystemWindows="false">
+        tools:ignore="HardcodedText">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:weightSum="100"
             android:background="#515050"
             android:orientation="vertical"
+            android:weightSum="100"
             tools:context=".DimensioningClientApp">
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="5dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="30"
-                android:background="#686767">
+                android:background="#686767"
+                android:orientation="vertical">
 
             <TextView
                     android:id="@+id/headerTextView"
@@ -70,20 +70,20 @@
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="5dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="20"
-                android:background="#686767">
+                android:background="#686767"
+                android:orientation="horizontal">
 
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/box_ID"
                     android:layout_marginLeft="10dp"
-                    android:textSize="12dp"
-                    android:textColor="#ffffff"></TextView>
+                    android:text="@string/box_ID"
+                    android:textColor="#ffffff"
+                    android:textSize="12dp"></TextView>
 
             <EditText
                     android:id="@+id/editTextBoxID"
@@ -121,10 +121,10 @@
                 android:id="@+id/checkBoxReportImage"
                 android:layout_width="150dp"
                 android:layout_height="25dp"
-                android:scaleX="0.80"
-                android:scaleY="0.80"
                 android:buttonTint="#2185D5"
                 android:checked="false"
+                android:scaleX="0.80"
+                android:scaleY="0.80"
                 android:text="@string/save_image"
                 android:textColor="#ffffff" />
 
@@ -142,41 +142,41 @@
                 <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:layout_marginLeft="20dp"
-                        android:background="@drawable/control_switch_background_border">
+                        android:background="@drawable/control_switch_background_border"
+                        android:orientation="horizontal">
 
                     <TextView
                             android:id="@+id/in"
-                            android:background="@drawable/selected_inch_bg"
-                            android:gravity="center"
-                            android:height="12px"
-                            android:layout_height="wrap_content"
                             android:layout_width="fill_parent"
-                            android:lineSpacingMultiplier="1.17"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:width="14px"
+                            android:height="12px"
+                            android:background="@drawable/selected_inch_bg"
                             android:fontFamily="sans-serif"
+                            android:gravity="center"
+                            android:lineSpacingMultiplier="1.17"
+                            android:text="IN"
                             android:textColor="#FFFFFF"
                             android:textSize="25px"
-                            android:text="IN"
-                            android:layout_weight="1"
-                            android:visibility="invisible"
-                            android:width="14px"></TextView>
+                            android:visibility="invisible"></TextView>
 
                     <TextView
                             android:id="@+id/cm"
-                            android:background="@drawable/unselected_cm_bg"
-                            android:gravity="center"
-                            android:height="12px"
-                            android:layout_height="wrap_content"
                             android:layout_width="fill_parent"
-                            android:lineSpacingMultiplier="1.17"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:width="14px"
+                            android:height="12px"
+                            android:background="@drawable/unselected_cm_bg"
                             android:fontFamily="sans-serif"
+                            android:gravity="center"
+                            android:lineSpacingMultiplier="1.17"
+                            android:text="CM"
                             android:textColor="#FFFFFF"
                             android:textSize="25px"
-                            android:text="CM"
-                            android:layout_weight="1"
-                            android:visibility="invisible"
-                            android:width="14px"></TextView>
+                            android:visibility="invisible"></TextView>
                 </LinearLayout>
 
                 <TextView
@@ -185,232 +185,159 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="10dp"
-                        android:textStyle="bold"
+                        android:layout_marginBottom="0dp"
+                        android:background="#515050"
                         android:text="@string/reset_data"
                         android:textColor="@color/white"
                         android:textSize="12dp"
-                        android:layout_marginBottom="0dp"
-                        android:background="#515050"></TextView>
+                        android:textStyle="bold"></TextView>
 
             </RelativeLayout>
 
             <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center|bottom"
-                    android:orientation="horizontal"
+                    android:layout_height="30dp"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp">
+                    android:layout_marginRight="10dp"
+                    android:gravity="center|bottom"
+                    android:orientation="horizontal">
 
-                <LinearLayout
-                        android:id="@+id/linearlayoutLength"
+                <FrameLayout
+                        android:id="@+id/frameLayoutLength"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
+                        android:layout_height="match_parent"
                         android:layout_marginBottom="1dp"
-                        android:layout_marginLeft="10dp"
-                        android:orientation="horizontal"
                         android:layout_weight="1"
-                        android:background="@drawable/box">
+                        android:background="@drawable/box"
+                        android:orientation="horizontal">
 
-                    <LinearLayout
+                    <TextView
+                            android:id="@+id/lengthTextView"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_width="match_parent"
-                            android:orientation="vertical"
-                            android:layout_weight="1">
+                            android:layout_marginLeft="5dp"
+                            android:editable="false"
+                            android:text="@string/box_length"
+                            android:textColor="#ffffff"
+                            android:textSize="9dp"
+                            tools:ignore="Deprecated" />
 
-                        <TextView
-                                android:id="@+id/lengthTextView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/box_length"
-                                android:editable="false"
-                                android:layout_marginLeft="5dp"
-                                android:textSize="9dp"
-                                android:textColor="#ffffff"
-                                tools:ignore="Deprecated"></TextView>
+                    <TextView
+                            android:id="@+id/lengthTextViewIcon"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_gravity="right|center_vertical"
+                            android:layout_marginEnd="5dp" />
 
-                        <HorizontalScrollView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
+                    <EditText
+                            android:id="@+id/editTextLength"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_margin="5dp"
+                            android:background="@null"
+                            android:editable="false"
+                            android:focusable="false"
+                            android:focusableInTouchMode="true"
+                            android:gravity="center_vertical"
+                            android:imeOptions="actionNext"
+                            android:singleLine="true"
+                            android:textColor="#ffffff"
+                            android:textColorHint="#fff"
+                            android:textSize="10dp" />
 
-                            <EditText
-                                    android:id="@+id/editTextLength"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="5dp"
-                                    android:layout_marginBottom="2dp"
-                                    android:editable="false"
-                                    android:focusable="true"
-                                    android:inputType="number"
-                                    android:focusableInTouchMode="true"
-                                    android:imeOptions="actionNext"
-                                    android:singleLine="true"
-                                    android:textColorHint="#fff"
-                                    android:background="@null"
-                                    android:textSize="10dp"
-                                    android:textColor="#ffffff"></EditText>
-                        </HorizontalScrollView>
-                    </LinearLayout>
+                </FrameLayout>
 
-                    <LinearLayout
-                            android:layout_height="match_parent"
-                            android:layout_width="match_parent"
-                            android:layout_gravity="center"
-                            android:layout_weight="3"
-                            android:gravity="center">
-
-                        <TextView
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginRight="20dp"
-                                android:id="@+id/lengthTextViewIcon"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:scaleX="2.0"
-                                android:scaleY="2.0"></TextView>
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                        android:id="@+id/linearlayoutWidth"
+                <FrameLayout
+                        android:id="@+id/frameLayoutWidth"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginBottom="2dp"
+                        android:layout_height="match_parent"
                         android:layout_marginLeft="10dp"
-                        android:orientation="horizontal"
+                        android:layout_marginBottom="1dp"
                         android:layout_weight="1"
-                        android:background="@drawable/box">
+                        android:background="@drawable/box"
+                        android:orientation="horizontal">
 
-                    <LinearLayout
+                    <TextView
+                            android:id="@+id/widthTextView"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_width="match_parent"
-                            android:orientation="vertical"
-                            android:layout_weight="1">
+                            android:layout_marginLeft="5dp"
+                            android:editable="false"
+                            android:text="@string/box_width"
+                            android:textColor="#ffffff"
+                            android:textSize="9dp"
+                            tools:ignore="Deprecated" />
 
-                        <TextView
-                                android:id="@+id/widthTextView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/box_width"
-                                android:editable="false"
-                                android:layout_marginLeft="5dp"
-                                android:textSize="9dp"
-                                android:textColor="#ffffff"
-                                tools:ignore="Deprecated"></TextView>
+                    <TextView
+                            android:id="@+id/widthTextViewIcon"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_gravity="right|center_vertical"
+                            android:layout_marginEnd="5dp" />
 
-                        <HorizontalScrollView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
+                    <EditText
+                            android:id="@+id/editTextWidth"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_margin="5dp"
+                            android:background="@null"
+                            android:editable="false"
+                            android:focusable="false"
+                            android:focusableInTouchMode="true"
+                            android:imeOptions="actionNext"
+                            android:singleLine="true"
+                            android:textColor="#ffffff"
+                            android:textColorHint="#fff"
+                            android:textSize="10dp"
+                            tools:ignore="Deprecated" />
+                </FrameLayout>
 
-                            <EditText
-                                    android:id="@+id/editTextWidth"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="5dp"
-                                    android:layout_marginBottom="2dp"
-                                    android:editable="false"
-                                    android:focusable="false"
-                                    android:focusableInTouchMode="true"
-                                    android:imeOptions="actionNext"
-                                    android:singleLine="true"
-                                    android:textColorHint="#fff"
-                                    android:background="@null"
-                                    android:textSize="10dp"
-                                    android:textColor="#ffffff"
-                                    tools:ignore="Deprecated"></EditText>
-
-                        </HorizontalScrollView>
-                    </LinearLayout>
-
-                    <LinearLayout
-                            android:layout_height="match_parent"
-                            android:layout_width="match_parent"
-                            android:layout_gravity="center"
-                            android:layout_weight="3"
-                            android:gravity="center">
-
-                        <TextView
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginRight="20dp"
-                                android:id="@+id/widthTextViewIcon"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:scaleX="2.0"
-                                android:scaleY="2.0"></TextView>
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                        android:id="@+id/linearlayoutHeight"
+                <FrameLayout
+                        android:id="@+id/frameLayoutHeight"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginBottom="2dp"
+                        android:layout_height="match_parent"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:orientation="horizontal"
+                        android:layout_marginBottom="1dp"
                         android:layout_weight="1"
-                        android:background="@drawable/box">
+                        android:background="@drawable/box"
+                        android:orientation="horizontal">
 
-                    <LinearLayout
+                    <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_width="match_parent"
-                            android:orientation="vertical"
-                            android:layout_weight="1">
+                            android:layout_marginLeft="5dp"
+                            android:editable="false"
+                            android:text="@string/box_height"
+                            android:textColor="#ffffff"
+                            android:textSize="9dp"
+                            tools:ignore="Deprecated" />
 
-                        <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/box_height"
-                                android:editable="false"
-                                android:layout_marginLeft="5dp"
-                                android:textSize="9dp"
-                                android:textColor="#ffffff"
-                                tools:ignore="Deprecated"></TextView>
+                    <TextView
+                            android:id="@+id/heightTextViewIcon"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_gravity="right|center_vertical"
+                            android:layout_marginEnd="5dp" />
 
-                        <HorizontalScrollView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
-
-                            <EditText
-                                    android:id="@+id/editTextHeight"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="5dp"
-                                    android:layout_marginBottom="2dp"
-                                    android:editable="false"
-                                    android:focusable="false"
-                                    android:focusableInTouchMode="true"
-                                    android:imeOptions="actionDone"
-                                    android:singleLine="true"
-                                    android:textColorHint="#fff"
-                                    android:background="@null"
-                                    android:textSize="10dp"
-                                    android:textColor="#ffffff"
-                                    tools:ignore="Deprecated"></EditText>
-
-                        </HorizontalScrollView>
-                    </LinearLayout>
-
-                    <LinearLayout
-                            android:layout_height="match_parent"
-                            android:layout_width="match_parent"
-                            android:layout_gravity="center"
-                            android:layout_weight="3"
-                            android:gravity="center">
-
-                        <TextView
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginRight="20dp"
-                                android:id="@+id/heightTextViewIcon"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:scaleX="2.0"
-                                android:scaleY="2.0"></TextView>
-                    </LinearLayout>
-                </LinearLayout>
+                    <EditText
+                            android:id="@+id/editTextHeight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_margin="5dp"
+                            android:background="@null"
+                            android:editable="false"
+                            android:focusable="false"
+                            android:focusableInTouchMode="true"
+                            android:imeOptions="actionNext"
+                            android:singleLine="true"
+                            android:textColor="#ffffff"
+                            android:textColorHint="#fff"
+                            android:textSize="10dp"
+                            tools:ignore="Deprecated" />
+                </FrameLayout>
             </LinearLayout>
 
             <Button
@@ -421,11 +348,11 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="1dp"
+                    android:clickable="false"
+                    android:enabled="false"
                     android:text="@string/start_dimensioning"
                     android:textAllCaps="false"
                     android:textSize="15dp"
-                    android:clickable="false"
-                    android:enabled="false"
                     app:backgroundTint="#808080" />
 
         </LinearLayout>
@@ -439,8 +366,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:fitsSystemWindows="false"
             android:background="#4C4C4C"
+            android:fitsSystemWindows="false"
             app:itemIconTint="@drawable/drawer_item_color"
             app:itemTextColor="@drawable/drawer_item_color"
             app:menu="@menu/navigation_menu" />
