@@ -13,7 +13,7 @@
     <string name="bundle_version">Versione Bundle: </string>
     <string name="framework_version">Framework Version: </string>
     <string name="service_version">Versione di servizio: </string>
-    <string name="copyrights">© 2021 Zebra Technologies Corp \n Tutti i diritti riservati.</string>
+    <string name="copyrights">© 2022 Zebra Technologies Corp \n Tutti i diritti riservati.</string>
     <!--to toggle the open close button
     of the navigation drawer-->
     <string name="nav_open">aprire</string>
