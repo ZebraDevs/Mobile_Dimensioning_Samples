@@ -95,6 +95,8 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
     // Save UI elements when going to About screen
     private static boolean mPersistImage = false;
     private static String mPersistBoxId;
+    private static boolean mIsDimensionServiceEnabling = false;
+    private static boolean mIsDimensionServiceEnabled = false;
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus)
@@ -125,7 +127,10 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                                                             @Override
                                                             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
                                                             {
-                                                                sendIntentApi(DimensioningConstants.INTENT_ACTION_SET_DIMENSION_PARAMETER, DimensioningConstants.REPORT_IMAGE, isChecked);
+                                                                if (mIsDimensionServiceEnabled)
+                                                                {
+                                                                    sendIntentApi(DimensioningConstants.INTENT_ACTION_SET_DIMENSION_PARAMETER, DimensioningConstants.REPORT_IMAGE, isChecked);
+                                                                }
                                                             }
                                                         }
         );
@@ -161,8 +166,10 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
             {
                 Log.e(TAG, "Reset");
                 mPersistValue = false;
-                Log.d(TAG, "Calling Get Dimension Intent ");
-                sendIntentApi(DimensioningConstants.INTENT_ACTION_GET_DIMENSION_PARAMETER);
+                if (mIsDimensionServiceEnabled)
+                {
+                    sendIntentApi(DimensioningConstants.INTENT_ACTION_GET_DIMENSION_PARAMETER);
+                }
             }
         });
 
@@ -175,7 +182,10 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                 mParcelID.getText().clear();
                 Log.d(TAG, "boxID is: " + parcelID);
                 Log.d(TAG, "Start Dimensioning");
-                sendIntentApi(DimensioningConstants.INTENT_ACTION_GET_DIMENSION, DimensioningConstants.PARCEL_ID, parcelID);
+                if (mIsDimensionServiceEnabled)
+                {
+                    sendIntentApi(DimensioningConstants.INTENT_ACTION_GET_DIMENSION, DimensioningConstants.PARCEL_ID, parcelID);
+                }
                 disableStartDimensioningButton();
             }
         });
@@ -299,8 +309,13 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                         case DimensioningConstants.INTENT_ACTION_ENABLE_DIMENSION:
                             try
                             {
-                                if (dimResultCode == DimensioningConstants.SUCCESS)
+                                if (!mIsDimensionServiceEnabling)
                                 {
+                                    // We ignore ENABLE response when no longer enabling
+                                }
+                                else if (dimResultCode == DimensioningConstants.SUCCESS)
+                                {
+                                    mIsDimensionServiceEnabled = true;
                                     Bundle params = new Bundle();
                                     if (mReportImageCheckBox.isChecked())
                                     {
@@ -503,13 +518,19 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                                 if (dimResultCode == DimensioningConstants.SUCCESS)
                                 {
                                     //Below Intent is called to update the ready values everytime the switch is toggled
-                                    sendIntentApi(DimensioningConstants.INTENT_ACTION_GET_DIMENSION_PARAMETER);
+                                    if (mIsDimensionServiceEnabled)
+                                    {
+                                        sendIntentApi(DimensioningConstants.INTENT_ACTION_GET_DIMENSION_PARAMETER);
+                                    }
                                 }
                                 else
                                 {
                                     Toast.makeText(this, dimResultMessage, Toast.LENGTH_SHORT).show();
                                     disableStartDimensioningButton();
-                                    sendIntentApi(DimensioningConstants.INTENT_ACTION_DISABLE_DIMENSION, DimensioningConstants.MODULE, DimensioningConstants.PARCEL_MODULE);
+                                    if (mIsDimensionServiceEnabled)
+                                    {
+                                        sendIntentApi(DimensioningConstants.INTENT_ACTION_DISABLE_DIMENSION, DimensioningConstants.MODULE, DimensioningConstants.PARCEL_MODULE);
+                                    }
                                 }
                             }
                             catch (Exception e)
@@ -592,9 +613,12 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
     public void callIntentApiForToggleSwitch(String selectedUnit)
     {
         mPersistValue = false;
-        sendIntentApi(DimensioningConstants.INTENT_ACTION_SET_DIMENSION_PARAMETER,
-                DimensioningConstants.DIMENSIONING_UNIT, selectedUnit);
-        Log.d(TAG, "Calling Set Dimension Parameter Intent selectedUnit = " + selectedUnit);
+        if (mIsDimensionServiceEnabled)
+        {
+            Log.d(TAG, "Calling Set Dimension Parameter Intent selectedUnit = " + selectedUnit);
+            sendIntentApi(DimensioningConstants.INTENT_ACTION_SET_DIMENSION_PARAMETER,
+                    DimensioningConstants.DIMENSIONING_UNIT, selectedUnit);
+        }
     }
 
     /**
@@ -788,10 +812,17 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
 
         if (intent.getAction().equals(DimensioningConstants.INTENT_ACTION_ENABLE_DIMENSION))
         {
+            mIsDimensionServiceEnabling = true;
+            mIsDimensionServiceEnabled = false;
             startForegroundService(intent);
         }
         else
         {
+            if (intent.getAction().equals(DimensioningConstants.INTENT_ACTION_DISABLE_DIMENSION))
+            {
+                mIsDimensionServiceEnabling = false;
+                mIsDimensionServiceEnabled = false;
+            }
             sendBroadcast(intent);
         }
     }
