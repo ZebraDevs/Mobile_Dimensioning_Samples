@@ -36,7 +36,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="2dp"
                     android:layout_marginRight="20dp"
                     android:text="@string/welcome_message"
                     android:textColor="#ffffff"
@@ -99,7 +99,7 @@
                     android:textColor="#ffffff"
                     android:textColorHint="#fff"
                     android:textSize="11dp"
-                    tools:ignore="Deprecated"></EditText>
+                    tools:ignore="Deprecated,TouchTargetSizeCheck,TouchTargetSizeCheck"></EditText>
 
         </LinearLayout>
 
@@ -159,9 +159,8 @@
                             android:lineSpacingMultiplier="1.17"
                             android:text="IN"
                             android:textColor="#FFFFFF"
-                            android:textSize="20px"
+                            android:textSize="25px"
                             android:visibility="invisible"></TextView>
-
 
                     <TextView
                             android:id="@+id/cm"
@@ -176,7 +175,7 @@
                             android:lineSpacingMultiplier="1.17"
                             android:text="CM"
                             android:textColor="#FFFFFF"
-                            android:textSize="20px"
+                            android:textSize="25px"
                             android:visibility="invisible"></TextView>
                 </LinearLayout>
 
@@ -217,7 +216,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
-                            android:layout_marginTop="2dp"
                             android:editable="false"
                             android:text="@string/box_length"
                             android:textColor="#ffffff"
@@ -229,7 +227,7 @@
                             android:layout_width="15dp"
                             android:layout_height="15dp"
                             android:layout_gravity="right|center_vertical"
-                            android:layout_marginRight="5dp" />
+                            android:layout_marginEnd="5dp" />
 
                     <EditText
                             android:id="@+id/editTextLength"
@@ -239,14 +237,14 @@
                             android:layout_margin="5dp"
                             android:background="@null"
                             android:editable="false"
-                            android:focusable="true"
+                            android:focusable="false"
                             android:focusableInTouchMode="true"
+                            android:gravity="center_vertical"
                             android:imeOptions="actionNext"
-                            android:inputType="number"
                             android:singleLine="true"
                             android:textColor="#ffffff"
                             android:textColorHint="#fff"
-                            android:textSize="9dp" />
+                            android:textSize="10dp" />
 
                 </FrameLayout>
 
@@ -265,7 +263,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
-                            android:layout_marginTop="2dp"
                             android:editable="false"
                             android:text="@string/box_width"
                             android:textColor="#ffffff"
@@ -277,7 +274,7 @@
                             android:layout_width="15dp"
                             android:layout_height="15dp"
                             android:layout_gravity="right|center_vertical"
-                            android:layout_marginRight="5dp" />
+                            android:layout_marginEnd="5dp" />
 
                     <EditText
                             android:id="@+id/editTextWidth"
@@ -287,15 +284,14 @@
                             android:layout_margin="5dp"
                             android:background="@null"
                             android:editable="false"
-                            android:focusable="true"
+                            android:focusable="false"
                             android:focusableInTouchMode="true"
                             android:imeOptions="actionNext"
-                            android:inputType="number"
                             android:singleLine="true"
                             android:textColor="#ffffff"
                             android:textColorHint="#fff"
-                            android:textSize="9dp" />
-
+                            android:textSize="10dp"
+                            tools:ignore="Deprecated" />
                 </FrameLayout>
 
                 <FrameLayout
@@ -309,13 +305,11 @@
                         android:orientation="horizontal">
 
                     <TextView
-                            android:id="@+id/heightTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
-                            android:layout_marginTop="2dp"
                             android:editable="false"
-                            android:text="@string/box_width"
+                            android:text="@string/box_height"
                             android:textColor="#ffffff"
                             android:textSize="9dp"
                             tools:ignore="Deprecated" />
@@ -325,7 +319,7 @@
                             android:layout_width="15dp"
                             android:layout_height="15dp"
                             android:layout_gravity="right|center_vertical"
-                            android:layout_marginRight="5dp" />
+                            android:layout_marginEnd="5dp" />
 
                     <EditText
                             android:id="@+id/editTextHeight"
@@ -335,15 +329,14 @@
                             android:layout_margin="5dp"
                             android:background="@null"
                             android:editable="false"
-                            android:focusable="true"
+                            android:focusable="false"
                             android:focusableInTouchMode="true"
                             android:imeOptions="actionNext"
-                            android:inputType="number"
                             android:singleLine="true"
                             android:textColor="#ffffff"
                             android:textColorHint="#fff"
-                            android:textSize="9dp" />
-
+                            android:textSize="10dp"
+                            tools:ignore="Deprecated" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -364,7 +357,6 @@
 
         </LinearLayout>
     </LinearLayout>
-
 
     <!--this the navigation view which draws
         and shows the navigation drawer-->
