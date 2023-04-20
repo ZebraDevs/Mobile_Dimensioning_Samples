@@ -8,8 +8,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -31,8 +33,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
-import com.zebra.security.broadcastprotection.BroadCastAuthenticator;
-import com.zebra.security.broadcastprotection.OnInitCallback;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -80,7 +80,6 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private DrawerLayout drawerLayout;
 
-    private final BroadCastAuthenticator vIntentprotect = new BroadCastAuthenticator();
     static Instant mTokenExpiration;
     static String token = "";
 
@@ -114,13 +113,13 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initialization();
+
         //Token authenticator initialization.
         if (token == null || token.isEmpty())
         {
             generateToken();
         }
-
-        initialization();
 
         mReportImageCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
                                                         {
@@ -212,59 +211,66 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
     public void generateToken()
     {
         Log.d(TAG, "generateToken()");
-        vIntentprotect.initialize(getApplicationContext(), new OnInitCallback()
+        Uri ZDM_AUTHORITY_URI = Uri.parse("content://com.zebra.devicemanager.zdmcontentprovider");
+        Uri ACQUIRE_TOKEN_URI = Uri.withAppendedPath(ZDM_AUTHORITY_URI, "AcquireToken");
+
+        try
         {
-            @Override
-            public void onInitialized()
+            Cursor cursor = this.getContentResolver().query(ACQUIRE_TOKEN_URI, (String[]) null,
+                    "delegation_scope=?", new String[]{DimensioningConstants.SERVICE_IDENTIFIER}, (String) null);
+            if (cursor != null && cursor.getCount() > 0)
             {
-                Log.d(TAG, "BroadCastAuthenticator is successfully initialized");
-                try
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex("query_result");
+                if (columnIndex >= 0)
                 {
-                    token = vIntentprotect.getToken(DimensioningConstants.SERVICE_IDENTIFIER);
-                    if (token != null && !token.isEmpty())
-                    {
-                        mTokenExpiration = Instant.now().plus(TOKEN_EXPIRATION_HOURS, ChronoUnit.HOURS);
-                        if (isDimensioningServiceAvailable())
-                        {
-                            sendIntentApi(DimensioningConstants.INTENT_ACTION_ENABLE_DIMENSION, DimensioningConstants.MODULE, DimensioningConstants.PARCEL_MODULE);
-                        }
-                        else
-                        {
-                            Log.e(TAG, "Dimensioning service not available");
-                            runOnUiThread(new Runnable()
-                            {
-                                public void run()
-                                {
-                                    Toast.makeText(mContext, getResources().getString(R.string.dimensioning_service_availability_check), Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                    }
-                    else
-                    {
-                        Log.d(TAG, "Token is empty or null");
-                        runOnUiThread(new Runnable()
-                        {
-                            public void run()
-                            {
-                                Toast.makeText(mContext, getResources().getString(R.string.permission_not_granted), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
+                    token = cursor.getString(columnIndex);
                 }
-                catch (Exception exception)
-                {
-                    Log.e(TAG, "generateToken", exception);
-                    runOnUiThread(new Runnable()
-                    {
-                        public void run()
-                        {
-                            Toast.makeText(mContext, getResources().getString(R.string.permission_not_granted), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
+                cursor.close();
             }
-        });
+        }
+        catch (Exception var3)
+        {
+            if (var3 instanceof SecurityException)
+            {
+                Log.e(TAG, "Invalid Token/Caller");
+            }
+            else
+            {
+                Log.e(TAG, "Unknown Caller to acquire token");
+            }
+        }
+
+        if (token != null && !token.isEmpty())
+        {
+            mTokenExpiration = Instant.now().plus(TOKEN_EXPIRATION_HOURS, ChronoUnit.HOURS);
+            if (isDimensioningServiceAvailable())
+            {
+                sendIntentApi(DimensioningConstants.INTENT_ACTION_ENABLE_DIMENSION, DimensioningConstants.MODULE, DimensioningConstants.PARCEL_MODULE);
+            }
+            else
+            {
+                Log.e(TAG, "Dimensioning service not available");
+                runOnUiThread(new Runnable()
+                {
+                    public void run()
+                    {
+                        Toast.makeText(mContext, getResources().getString(R.string.dimensioning_service_availability_check), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }
+        else
+        {
+            Log.d(TAG, "Token is empty or null");
+            runOnUiThread(new Runnable()
+            {
+                public void run()
+                {
+                    Toast.makeText(mContext, getResources().getString(R.string.permission_not_granted), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     // override the onOptionsItemSelected()

@@ -2,8 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         package="com.sample.dimensionapp">
 
+    <uses-permission android:name="com.zebra.devicemanager.provider.READ_PERMISSION" />
     <queries>
         <package android:name="com.zebra.dimensioning" />
+        <package android:name="com.zebra.devicemanager" />
     </queries>
 
     <application
