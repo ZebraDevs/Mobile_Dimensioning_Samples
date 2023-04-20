@@ -913,7 +913,6 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
         else
         {
             mPersistValue = false;
-            sendIntentApi(DimensioningConstants.INTENT_ACTION_DISABLE_DIMENSION);
             super.onBackPressed();
         }
     }
