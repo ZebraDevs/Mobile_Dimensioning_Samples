@@ -18,16 +18,14 @@
             android:layout_height="match_parent"
             android:background="#515050"
             android:orientation="vertical"
-            android:weightSum="100"
             tools:context=".DimensioningClientApp">
 
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="10dp"
-                android:layout_weight="30"
                 android:background="#686767"
                 android:orientation="vertical">
 
@@ -45,7 +43,7 @@
 
             <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginRight="20dp"
@@ -60,7 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="2dp"
                 android:layout_marginRight="20dp"
                 android:text="@string/scan_boxID"
                 android:textColor="#ffffff"
@@ -69,11 +67,10 @@
 
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="20dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="2dp"
                 android:layout_marginRight="10dp"
-                android:layout_weight="20"
                 android:background="#686767"
                 android:orientation="horizontal">
 
@@ -106,12 +103,8 @@
         <Button
                 android:id="@+id/buttonScanBarcode"
                 android:layout_width="wrap_content"
-                android:layout_height="35dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center_horizontal|center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="1dp"
                 android:text="@string/scan_barcode"
                 android:textAllCaps="false"
                 android:textSize="14dp"
@@ -120,24 +113,25 @@
         <CheckBox
                 android:id="@+id/checkBoxReportImage"
                 android:layout_width="150dp"
-                android:layout_height="25dp"
+                android:layout_height="20dp"
                 android:buttonTint="#2185D5"
                 android:checked="false"
                 android:scaleX="0.80"
                 android:scaleY="0.80"
                 android:text="@string/save_image"
-                android:textColor="#ffffff" />
+                android:textColor="#ffffff"
+                android:textSize="12dp"/>
 
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="30"
+                android:layout_height="108dp"
                 android:gravity="center|bottom"
                 android:orientation="vertical">
 
             <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp">
 
                 <LinearLayout
                         android:layout_width="wrap_content"
@@ -148,34 +142,34 @@
 
                     <TextView
                             android:id="@+id/in"
-                            android:layout_width="fill_parent"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:width="14px"
-                            android:height="12px"
+                            android:width="14dp"
+                            android:height="12dp"
                             android:background="@drawable/selected_inch_bg"
                             android:fontFamily="sans-serif"
                             android:gravity="center"
                             android:lineSpacingMultiplier="1.17"
                             android:text="IN"
                             android:textColor="#FFFFFF"
-                            android:textSize="25px"
+                            android:textSize="8dp"
                             android:visibility="invisible"></TextView>
 
                     <TextView
                             android:id="@+id/cm"
-                            android:layout_width="fill_parent"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:width="14px"
-                            android:height="12px"
+                            android:width="14dp"
+                            android:height="12dp"
                             android:background="@drawable/unselected_cm_bg"
                             android:fontFamily="sans-serif"
                             android:gravity="center"
                             android:lineSpacingMultiplier="1.17"
                             android:text="CM"
                             android:textColor="#FFFFFF"
-                            android:textSize="25px"
+                            android:textSize="8dp"
                             android:visibility="invisible"></TextView>
                 </LinearLayout>
 
@@ -347,7 +341,7 @@
                     android:layout_gravity="center_horizontal|center"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginBottom="12dp"
                     android:clickable="false"
                     android:enabled="false"
                     android:text="@string/start_dimensioning"

@@ -41,7 +41,10 @@
                     android:text="@string/welcome_message"
                     android:textColor="#ffffff"
                     android:textSize="20dp"
-                    android:textStyle="bold">
+                    android:textStyle="bold"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:autoSizeTextType="uniform">
 
             </TextView>
 
@@ -49,7 +52,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="2dp"
                     android:layout_marginRight="15dp"
                     android:text="@string/app_info"
                     android:textColor="#ffffff"
