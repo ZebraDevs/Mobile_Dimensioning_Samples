@@ -64,7 +64,8 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
     private static final String DATA_WEDGE_PROFILE_NAME = "MDClient";
 
     private Context mContext = null;
-    private EditText mTxtLength, mTxtWidth, mTxtHeight, mParcelID;
+    private TextView mTxtLength, mTxtWidth, mTxtHeight;
+    private EditText mParcelID;
     private Button mStartDimensioningButton, mScanBarcodeButton;
     private TextView mTextViewInch;
     private TextView mTextViewCm;
@@ -589,9 +590,9 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
 
         mContext = getApplicationContext();
         mTextViewReset = findViewById(R.id.reset);
-        mTxtLength = findViewById(R.id.editTextLength);
-        mTxtWidth = findViewById(R.id.editTextWidth);
-        mTxtHeight = findViewById(R.id.editTextHeight);
+        mTxtLength = findViewById(R.id.textViewLength);
+        mTxtWidth = findViewById(R.id.textViewWidth);
+        mTxtHeight = findViewById(R.id.textViewHeight);
         mTextViewInch = findViewById(R.id.in);
         mTextViewCm = findViewById(R.id.cm);
         mTextViewLengthIcon = findViewById(R.id.lengthTextViewIcon);

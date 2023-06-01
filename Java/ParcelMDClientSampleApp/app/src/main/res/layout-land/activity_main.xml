@@ -223,8 +223,8 @@
                             android:layout_gravity="right|center_vertical"
                             android:layout_marginEnd="5dp" />
 
-                    <EditText
-                            android:id="@+id/editTextLength"
+                    <TextView
+                            android:id="@+id/textViewLength"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
@@ -270,8 +270,8 @@
                             android:layout_gravity="right|center_vertical"
                             android:layout_marginEnd="5dp" />
 
-                    <EditText
-                            android:id="@+id/editTextWidth"
+                    <TextView
+                            android:id="@+id/textViewWidth"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
@@ -315,8 +315,8 @@
                             android:layout_gravity="right|center_vertical"
                             android:layout_marginEnd="5dp" />
 
-                    <EditText
-                            android:id="@+id/editTextHeight"
+                    <TextView
+                            android:id="@+id/textViewHeight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
