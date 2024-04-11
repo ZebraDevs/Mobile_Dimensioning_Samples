@@ -829,6 +829,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
             {
                 mIsDimensionServiceEnabling = false;
                 mIsDimensionServiceEnabled = false;
+                intent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND);
             }
             sendBroadcast(intent);
         }
