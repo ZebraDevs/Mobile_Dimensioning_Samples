@@ -746,6 +746,9 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
         mStartDimensioningButton.setEnabled(true);
         mStartDimensioningButton.setClickable(true);
         mStartDimensioningButton.setBackgroundColor(Color.parseColor("#2185D5"));
+        mReportImageCheckBox.setClickable(true);
+        mTextViewCm.setClickable(true);
+        mTextViewInch.setClickable(true);
     }
 
     /**
@@ -756,6 +759,9 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
         mStartDimensioningButton.setEnabled(false);
         mStartDimensioningButton.setClickable(false);
         mStartDimensioningButton.setBackgroundColor(Color.parseColor("#808080"));
+        mReportImageCheckBox.setClickable(false);
+        mTextViewCm.setClickable(false);
+        mTextViewInch.setClickable(false);
     }
 
     /**
