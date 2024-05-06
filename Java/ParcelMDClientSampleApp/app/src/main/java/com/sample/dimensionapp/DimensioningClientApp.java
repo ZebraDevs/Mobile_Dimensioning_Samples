@@ -13,6 +13,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
@@ -97,6 +99,9 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
     private static String mPersistBoxId;
     private static boolean mIsDimensionServiceEnabling = false;
     private static boolean mIsDimensionServiceEnabled = false;
+    private static final long ENABLE_RETRY_DELAY = 500L;
+    private static final int MAX_ENABLE_RETRIES = 3;
+    private static int mEnableRetryCount = 0;
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus)
@@ -341,6 +346,17 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                                     {
                                         sendIntentApi(DimensioningConstants.INTENT_ACTION_SET_DIMENSION_PARAMETER, params);
                                     }
+                                }
+                                else if (dimResultCode == DimensioningConstants.FAILURE && mEnableRetryCount < MAX_ENABLE_RETRIES)
+                                {
+                                    disableStartDimensioningButton();
+                                    mEnableRetryCount++;
+                                    new Handler(Looper.getMainLooper()).postDelayed(() ->
+                                    {
+                                        if (mIsDimensionServiceEnabling)
+                                            sendIntentApi(DimensioningConstants.INTENT_ACTION_ENABLE_DIMENSION, DimensioningConstants.MODULE,
+                                                    DimensioningConstants.PARCEL_MODULE);
+                                    }, ENABLE_RETRY_DELAY);
                                 }
                                 else
                                 {
@@ -948,6 +964,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
     protected void onStart()
     {
         Log.d(TAG, "onStart()");
+        mEnableRetryCount = 0;
         if (token != null && !token.isEmpty())
         {
             if (mTokenExpiration.isBefore(Instant.now()))
