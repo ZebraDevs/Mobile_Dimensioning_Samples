@@ -1015,22 +1015,25 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
     @Override
     public boolean onNavigationItemSelected(MenuItem item)
     {
-        switch (item.getItemId())
+        if (item.getItemId() == R.id.nav_account)
         {
-            case R.id.nav_account:
-                if (drawerLayout.isDrawerOpen(GravityCompat.START))
-                {
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                }
-                return true;
-            case R.id.nav_settings:
-                mPersistImage = mReportImageCheckBox.isChecked();
-                mPersistBoxId = mParcelID.getText().toString();
-                startActivity(new Intent(this, AboutPageActivity.class));
-                finishAfterTransition();
-                return true;
-            default:
-                return false;
+            if (drawerLayout.isDrawerOpen(GravityCompat.START))
+            {
+                drawerLayout.closeDrawer(GravityCompat.START);
+            }
+            return true;
+        }
+        else if (item.getItemId() == R.id.nav_settings)
+        {
+            mPersistImage = mReportImageCheckBox.isChecked();
+            mPersistBoxId = mParcelID.getText().toString();
+            startActivity(new Intent(this, AboutPageActivity.class));
+            finishAfterTransition();
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 

@@ -57,20 +57,23 @@ public class AboutPageActivity extends AppCompatActivity implements NavigationVi
     @Override
     public boolean onNavigationItemSelected(MenuItem item)
     {
-        switch (item.getItemId())
+        if (item.getItemId() == R.id.nav_account)
         {
-            case R.id.nav_account:
-                startActivity(new Intent(this, DimensioningClientApp.class));
-                finishAfterTransition();
-                return true;
-            case R.id.nav_settings:
-                if (drawerLayout.isDrawerOpen(GravityCompat.START))
-                {
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                }
-                return true;
-            default:
-                return false;
+            startActivity(new Intent(this, DimensioningClientApp.class));
+            finishAfterTransition();
+            return true;
+        }
+        else if (item.getItemId() == R.id.nav_settings)
+        {
+            if (drawerLayout.isDrawerOpen(GravityCompat.START))
+            {
+                drawerLayout.closeDrawer(GravityCompat.START);
+            }
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 

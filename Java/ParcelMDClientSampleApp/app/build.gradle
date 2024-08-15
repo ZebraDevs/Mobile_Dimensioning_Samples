@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 33
-    buildToolsVersion "30.0.3"
+    namespace "com.sample.dimensionapp"
 
     defaultConfig {
+        compileSdk 33
         applicationId "com.sample.dimensionapp"
         minSdkVersion 26
         targetSdkVersion 33
@@ -12,6 +12,10 @@ android {
         versionName "1.4.0.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 
     buildTypes {
