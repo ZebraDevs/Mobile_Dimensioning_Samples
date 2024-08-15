@@ -159,7 +159,7 @@
                 android:text="IN"
                 android:textColor="#FFFFFF"
                 android:textSize="8dp"
-                android:visibility="visible"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="@id/reset"
                 app:layout_constraintLeft_toLeftOf="@id/frameLayoutLength"
                 app:layout_constraintRight_toRightOf="@id/frameLayoutLength"
@@ -178,7 +178,7 @@
                 android:text="CM"
                 android:textColor="#FFFFFF"
                 android:textSize="8dp"
-                android:visibility="visible"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="@id/in"
                 app:layout_constraintLeft_toRightOf="@id/in"
                 app:layout_constraintTop_toTopOf="@id/in" />
