@@ -1006,7 +1006,8 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
     protected void onStop()
     {
         Log.d(TAG, "onStop()");
-        sendIntentApi(DimensioningConstants.INTENT_ACTION_DISABLE_DIMENSION);
+        if (!isChangingConfigurations())
+            sendIntentApi(DimensioningConstants.INTENT_ACTION_DISABLE_DIMENSION);
         super.onStop();
     }
 
