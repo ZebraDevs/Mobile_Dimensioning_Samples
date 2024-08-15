@@ -121,12 +121,6 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
 
         initialization();
 
-        //Token authenticator initialization.
-        if (token == null || token.isEmpty())
-        {
-            generateToken();
-        }
-
         mReportImageCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
                                                         {
                                                             @Override
@@ -250,21 +244,6 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
         if (token != null && !token.isEmpty())
         {
             mTokenExpiration = Instant.now().plus(TOKEN_EXPIRATION_HOURS, ChronoUnit.HOURS);
-            if (isDimensioningServiceAvailable())
-            {
-                sendIntentApi(DimensioningConstants.INTENT_ACTION_ENABLE_DIMENSION, DimensioningConstants.MODULE, DimensioningConstants.PARCEL_MODULE);
-            }
-            else
-            {
-                Log.e(TAG, "Dimensioning service not available");
-                runOnUiThread(new Runnable()
-                {
-                    public void run()
-                    {
-                        Toast.makeText(mContext, getResources().getString(R.string.dimensioning_service_availability_check), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
         }
         else
         {
@@ -816,7 +795,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
      */
     public void sendIntentApi(String action, Bundle extras)
     {
-        if (token == null || token.isEmpty())
+        if (BuildConfig.REQUIRE_TOKEN && (token == null || token.isEmpty()))
         {
             Log.e(TAG, "Token is Null");
             return;
@@ -826,8 +805,11 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
         Intent intent = new Intent();
         intent.setAction(action);
         intent.setPackage(DimensioningConstants.ZEBRA_DIMENSIONING_PACKAGE);
-        intent.putExtra(DimensioningConstants.APPLICATION_PACKAGE, getPackageName());
-        intent.putExtra(DimensioningConstants.TOKEN, token);
+        if (BuildConfig.REQUIRE_TOKEN)
+        {
+            intent.putExtra(DimensioningConstants.APPLICATION_PACKAGE, getPackageName());
+            intent.putExtra(DimensioningConstants.TOKEN, token);
+        }
 
         if (extras != null)
         {
@@ -960,22 +942,33 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
         }
     }
 
+    private void enableDimensioning()
+    {
+        if (isDimensioningServiceAvailable())
+        {
+            sendIntentApi(DimensioningConstants.INTENT_ACTION_ENABLE_DIMENSION, DimensioningConstants.MODULE, DimensioningConstants.PARCEL_MODULE);
+        }
+        else
+        {
+            Log.e(TAG, "Dimensioning service not available");
+            runOnUiThread(new Runnable()
+            {
+                public void run()
+                {
+                    Toast.makeText(mContext, getResources().getString(R.string.dimensioning_service_availability_check), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
     @Override
     protected void onStart()
     {
         Log.d(TAG, "onStart()");
         mEnableRetryCount = 0;
-        if (token != null && !token.isEmpty())
-        {
-            if (mTokenExpiration.isBefore(Instant.now()))
-            {
-                generateToken();
-            }
-            else
-            {
-                sendIntentApi(DimensioningConstants.INTENT_ACTION_ENABLE_DIMENSION, DimensioningConstants.MODULE, DimensioningConstants.PARCEL_MODULE);
-            }
-        }
+        if (BuildConfig.REQUIRE_TOKEN && (token == null || token.isEmpty() || mTokenExpiration.isBefore(Instant.now())))
+            generateToken();
+        enableDimensioning();
         if (mPersistImage)
         {
             mReportImageCheckBox.setChecked(mPersistImage);

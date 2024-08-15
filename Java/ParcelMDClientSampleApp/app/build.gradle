@@ -15,17 +15,20 @@ android {
     }
 
     buildTypes {
+        def REQUIRE_TOKEN = true
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             //signingConfig signingConfigs.release
             buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
             buildConfigField("String", "VERSION_NAME", "\"${defaultConfig.versionName}\"")
+            buildConfigField("boolean", "REQUIRE_TOKEN", "${REQUIRE_TOKEN}")
         }
         debug {
             //signingConfig signingConfigs.debug
             buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
             buildConfigField("String", "VERSION_NAME", "\"${defaultConfig.versionName}\"")
+            buildConfigField("boolean", "REQUIRE_TOKEN", "${REQUIRE_TOKEN}")
         }
         applicationVariants.all { variant ->
             variant.outputs.all { output ->
