@@ -418,7 +418,6 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                                 if ((dimResultCode != DimensioningConstants.SUCCESS) && (dimResultCode != DimensioningConstants.CANCELED))
                                 {
                                     Toast.makeText(this, dimResultMessage, Toast.LENGTH_SHORT).show();
-                                    disableStartDimensioningButton();
                                     sendIntentApi(DimensioningConstants.INTENT_ACTION_DISABLE_DIMENSION, DimensioningConstants.MODULE, DimensioningConstants.PARCEL_MODULE);
                                 }
                                 else
@@ -505,7 +504,6 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                                 else
                                 {
                                     Toast.makeText(this, dimResultMessage, Toast.LENGTH_SHORT).show();
-                                    disableStartDimensioningButton();
                                     sendIntentApi(DimensioningConstants.INTENT_ACTION_DISABLE_DIMENSION, DimensioningConstants.MODULE, DimensioningConstants.PARCEL_MODULE);
                                 }
                             }
@@ -528,7 +526,6 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                                 else
                                 {
                                     Toast.makeText(this, dimResultMessage, Toast.LENGTH_SHORT).show();
-                                    disableStartDimensioningButton();
                                     if (mIsDimensionServiceEnabled)
                                     {
                                         sendIntentApi(DimensioningConstants.INTENT_ACTION_DISABLE_DIMENSION, DimensioningConstants.MODULE, DimensioningConstants.PARCEL_MODULE);
@@ -831,6 +828,7 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
         {
             if (intent.getAction().equals(DimensioningConstants.INTENT_ACTION_DISABLE_DIMENSION))
             {
+                disableStartDimensioningButton();
                 mIsDimensionServiceEnabling = false;
                 mIsDimensionServiceEnabled = false;
                 intent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND);
