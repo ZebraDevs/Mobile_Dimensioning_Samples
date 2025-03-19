@@ -1,0 +1,11 @@
+imperial_units=false
+allow_empty_barcode=false
+automatic_upload=false
+url=
+report_image=false
+username=
+password=
+connect_timeout=1000
+read_timeout=1000
+num_retries=3
+retry_delay=100

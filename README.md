@@ -7,6 +7,10 @@ Note: This sample has been updated to work with Mobile Parcel 1.4.0.0, which rem
 Tested with:
 Android Studio Koala
 
+### MDIntegrationApp
+This sample demonstrates multiple ways to integrate Mobile Dimensioning into an existing customer environment. The application provides multiple ways to launch dimensioning and provide the dimensioning data to the customer environment.
+See [Detailed Documentation](Java/MDIntegrationApp/README.md) here. Tested with: Android Studio Koala
+
 ## Xamarin
 ### ParcelMDClientSampleApp
 This sample demonstrates the zebra recommended way of  usage  Mobile Parcel Dimensioning API in Line of Business Application (LOB) . This sample app is targeted for Xamarin Development Enviroment. Use this as a reference to build your Application.
