@@ -1,0 +1,18 @@
+[
+  {
+    "labelOn": "Battery",
+    "labelOff": "Battery"
+  },
+  {
+    "labelOn": "Fragile",
+    "labelOff": "Fragile"
+  },
+  {
+    "labelOn": "Hazardous",
+    "labelOff": "Hazardous"
+  },
+  {
+    "labelOn": "Damaged",
+    "labelOff": "Damaged"
+  }
+]

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="1dp"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/edittext_barcode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/barcode_empty"
+        android:inputType="text"
+        android:maxLines="1"
+        android:textColorHint="@color/dark_gray"/>
+
+    <LinearLayout
+        android:id="@+id/buttons_row_1_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dp"
+        android:weightSum="55">
+
+        <Space
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"/>
+
+        <ToggleButton
+            android:id="@+id/button_attribute_1"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="26"
+            android:lines="1"
+            android:background="@drawable/my_btn_toggle"
+            android:textColor="@color/black"
+            android:visibility="invisible"/>
+
+        <Space
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"/>
+
+        <ToggleButton
+            android:id="@+id/button_attribute_2"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="26"
+            android:lines="1"
+            android:background="@drawable/my_btn_toggle"
+            android:textColor="@color/black"
+            android:visibility="invisible"/>
+
+        <Space
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/buttons_row_2_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dp"
+        android:weightSum="55">
+
+        <Space
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"/>
+
+        <ToggleButton
+            android:id="@+id/button_attribute_3"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="26"
+            android:lines="1"
+            android:background="@drawable/my_btn_toggle"
+            android:textColor="@color/black"
+            android:visibility="invisible"/>
+
+        <Space
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"/>
+
+        <ToggleButton
+            android:id="@+id/button_attribute_4"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="26"
+            android:lines="1"
+            android:background="@drawable/my_btn_toggle"
+            android:textColor="@color/black"
+            android:visibility="invisible"/>
+
+        <Space
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/LinearLayoutOrientation"
+        android:id="@+id/buttons_row_3_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dp"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/button_start_dimensioning"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:lines="1"
+            android:text="@string/start_dimensioning"
+            android:textSize="20sp"
+            android:enabled="false"/>
+
+        <Button
+            android:id="@+id/button_upload"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:backgroundTint="@color/blue"
+            android:lines="1"
+            android:text="@string/upload"
+            android:textSize="20sp"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+</LinearLayout>

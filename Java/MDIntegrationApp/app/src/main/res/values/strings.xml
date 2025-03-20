@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Mobile Dimensioning Customer Integration App</string>
+    <string name="barcode_empty">Scan or type barcode</string>
+    <string name="start_dimensioning">Start Dimensioning</string>
+    <string name="upload">Upload</string>
+    <string name="uploading_data">Uploading data</string>
+    <string name="dimensioning_service_availability_check">Dimensioning service not available</string>
+</resources>
