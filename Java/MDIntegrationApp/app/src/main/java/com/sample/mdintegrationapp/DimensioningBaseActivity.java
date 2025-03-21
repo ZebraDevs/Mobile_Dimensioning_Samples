@@ -88,7 +88,6 @@ public class DimensioningBaseActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setAction(action);
         intent.setPackage(DimensioningConstants.ZEBRA_DIMENSIONING_PACKAGE);
-        intent.putExtra(DimensioningConstants.APPLICATION_PACKAGE, getPackageName());
 
         if (extras != null) {
             intent.putExtras(extras);
