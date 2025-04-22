@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enterprise Browser Dimensioning API Sample</title>
+    
+  <script type="text/javascript" charset="utf-8" src="ebapi-modules.js"></script>
+  <script type="text/javascript" charset="utf-8" src="dimensionSample.js"></script>
+  <link rel="stylesheet" href="dimensionSample.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1>Enterprise Browser Dimensioning API Sample</h1>
+    <div class="input-section">
+      <label for="parcelid">Parcel ID:</label>
+      <input type="text" id="parcelid" placeholder="Scan or Type Parcel ID" >
+    </div>
+    <div class="resultsTable">
+      <table id="dimensionTable">
+        <thead>
+          <tr>
+            <th>Length</th>
+            <th>Width</th>
+            <th>Height</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="lengthValue">-</td>
+            <td id="widthValue"> -</td>
+            <td id="heightValue">-</td>
+          </tr>
+          <tr>
+            <td id="lengthStatus">-</td>
+            <td id="widthStatus">-</td>
+            <td id="heightStatus">-</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <button id="startDimensioning" onclick="startDimensioning();">Start Dimensioning</button>
+  </div>
+</body>
+</html>
