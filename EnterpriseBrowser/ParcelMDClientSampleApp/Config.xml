@@ -1,0 +1,213 @@
+<?xml version = "1.0"?>
+<!--
+EnterpriseBrowser_v5.0.0.13 Configuration file
+-->
+<Configuration>
+   <EB_VERSION value="5.0.0.13"/>
+   <HideSystemBar value ="0"/>
+  <DebugButtons>
+    <DebugButtonsEnabled value="0" />
+  </DebugButtons>
+  
+  <Diagnostic>
+    <WebPageCapture value="0"/>
+  </Diagnostic> 
+  
+  <WebFiltering>
+	<WebFilteringEnabled value="0"/>
+	<WhiteListingUrls value=""/>
+	<BlackListingUrls value=""/>
+  </WebFiltering>
+	
+  <DebugSetting>
+    <DebugModeEnable value="1"/>
+  </DebugSetting> 
+	
+
+  
+
+
+  <Shortcut>
+    <ShortcutCreationEnabled value="0"/>
+  </Shortcut>
+  
+  <CustomKioskMode>
+	<setHomeKeyDisable	value ="0"/>
+	<setStatusBarDisable 	value ="0"/>
+	<setBackKeyDisable 	value ="0"/> 
+	<setVolumeButtonDisable 	value ="0"/>
+	<setRecentAppDisable    value ="0"/>
+  </CustomKioskMode>
+  <IME>
+	<DisableAllIME value ="0"/>
+  </IME>
+  <ZoomKey>
+    <ZoomInKey value=""/> 
+    <ZoomOutKey value=""/> 
+  </ZoomKey>
+  
+  <Logger>
+    <LogProtocol   value="FILE"/>
+    <LogPort       value="80"/>
+    <LogURI        value="file://%INSTALLDIR%/Log.txt"/>
+    <LogError      value="1"/>
+    <LogWarning    value="1"/>
+    <LogInfo       value="1"/>
+    <LogTrace      value="0"/>
+    <LogUser       value="0"/>
+    <LogMemory     value="0"/>
+    <LogMemPeriod  value="5000"/>
+    <LogMaxSize    value="5000"/>
+  </Logger>
+    
+  <FileLocations>
+    <RegEXFile  value="file://%INSTALLDIR%/RegEx.xml"/>
+  </FileLocations>
+      
+  <Screen>
+    <FullScreen value="1"/>
+    <PageZoom value="1.0" />
+    <EnableZoom value="1"/>
+    <DisplayZoomControls value="0"/>
+    <AutoRotate value="0"/>
+  </Screen>
+  
+  <TTS>
+	<TTSEnabled value="1"/>
+    <WelcomeText value="Enterprise Browser is now voice enabled"/>
+  </TTS>
+  
+  <InjectEBLibraries>
+	<JSLibraries value="0"/>
+  </InjectEBLibraries>
+  
+  <SplashScreen>
+	<SplashScreenPath value="file://%INSTALLDIR%/rho/apps/app/loading.png"/>
+	<SplashScreenDuration value="0"/>
+  </SplashScreen>
+  
+  <WakeLock>
+    <WakeLockType value=""/>
+  </WakeLock>
+ 
+  
+   
+  <DeviceKeys>
+  </DeviceKeys>
+  
+
+
+ 
+ 
+  <TabInstance>
+    <NewTabPhysicalMemLimit value="90"/>
+    <NewTabVirtualMemLimit value="80"/>
+  </TabInstance>
+
+  <Applications>
+    <Application>
+      
+      <HTTP_Proxy value=""/>
+      <HTTPS_Proxy value=""/>
+      <isWindowsKey  value="0"/>
+      <usedwforscanning  value="1"/>
+      <DisableHardwareAcceleration value="0"/>
+	  
+	  <BackgroundOnHomeKeyPressed>
+		<ClearWebData value="0"/>
+		<NavigateToHomePage value="0"/>	  
+	  </BackgroundOnHomeKeyPressed>
+	  
+      <IntentReceiver>
+        <EnableReceiver  value="0"/>
+        <IntentAction  value=""/>
+        <IntentCategory  value=""/>
+      </IntentReceiver>
+	  
+      <General>
+        <Name value="Menu"/>
+        <StartPage value="file://%INSTALLDIR%/dimensionSample.html" name="Menu"/>
+      </General>
+      
+      <Scanner>
+        <DisableScannerDuringNavigation value="1"/>
+      </Scanner>
+	  
+	  <ApplicationCache>
+	    <ApplicationCacheEnabled value="1"/>
+		<ClearApplicationCacheOnLaunch value="0"/>	
+        <ClearApplicationCacheOnExit value="0"/>		
+      </ApplicationCache>
+   
+      
+      <HTMLStyles>
+        <JavascriptEnabled value="1"/>
+		<DatabaseEnabled value="1"/>
+		<DomStorageEnabled value="1"/>
+		<GeoLocationEnabled	value="0"/>
+        <FontFamily value="Droid Sans Fallback"/>
+		<BackgroundColor value=""/>
+      </HTMLStyles>
+      
+      <SIP>
+        <ResizeOnSIP  value="1"/>
+      </SIP>
+
+      <System>
+        <LowBatteryScan  value="0"/>
+      </System>
+
+      <Sound>
+        <DecodeVolume           value=""/>
+        <DecodeFrequency        value=""/>
+        <InvalidDecodeFrequency value="0x9C4"/>
+        <DecodeDuration         value=""/>
+        <ScanDecodeWav          value=""/>
+        <ScanInvalidWav         value=""/>
+        <ImagerCaptureWav       value=""/>
+      </Sound>
+      
+      <GUI>
+        <SignalRefresh      value="5000"/>
+        <BatteryRefresh     value="5000"/>
+        <HourglassEnabled   value="1" />
+        <HourglassLeft      value="" />
+        <HourglassTop       value="" />
+      </GUI>
+      
+      <Navigation>
+		<NavTimeout value="45000"/>
+        <BadLinkURI value="file://%INSTALLDIR%/badlink.html"/>
+        <UserAgent value="" />
+		<NetworkCookieDatabase value="file://%INSTALLDIR%/cookies.db"/>
+		<VerifyPeerCertificate value="1"/>
+    	<Cookies value="1"/>		
+		<ThirdPartyCookies value="1"/>
+		<DeleteCookiesOnLaunch value="0"/>
+		<DeleteCookiesOnExit value="0"/>
+		<SaveFormData value="0"/>
+	    <SetCacheMode value="LOAD_DEFAULT"/>
+		<DeleteCacheOnLaunch value="0"/>
+		<DeleteCacheOnExit value="0"/>
+		<BlockNetworkImage value="0"/>
+	    <BlockNetworkLoads value="0"/>
+		<AllowUniversalAccessFromFileURLs value="1"/>
+	    <MixedContentMode value=""/>
+	  </Navigation>   
+	  
+	  <ViewPort>
+		<UseWideViewPort value="0"/>
+		<ViewPortWidth value=""/>
+		<ViewPortInitialScale value=""/>
+	  </ViewPort>
+    
+
+  
+      <DefaultMetaTags>
+      </DefaultMetaTags>
+
+      <CustomDOMElements value=""/>
+    
+    </Application>
+  </Applications>
+</Configuration>
