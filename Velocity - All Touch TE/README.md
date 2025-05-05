@@ -26,7 +26,7 @@ This project contains all the resources needed to make the Zebra Parcel Dimensio
 
 ## Setup
 
- 1. Build and install on the TC53/58 the MDIntegration app: https://github.com/ZebraDevs/Mobile_Dimensioning_Samples/tree/main/Java/MDIntegrationApp. This middleware allows velocity to use Zebra Mobile Parcel API.
+ 1. Build and install on the TC53/58 the [MDIntegration app](https://github.com/ZebraDevs/Mobile_Dimensioning_Samples/tree/main/Java/MDIntegrationApp). This middleware allows velocity to use Zebra Mobile Parcel API.
  2. Copy the profile **velocity-profile-zebra-dimensioning.wldep** attached to this project to the following path of your device: */sdcard/Android/data/com.wavelink.velocity/files/*
  3. Open Velocity app in your device and select "ZebraDimensioning" host profile.
  4. Tap the "Capture Volume" button
@@ -36,8 +36,9 @@ This project contains all the resources needed to make the Zebra Parcel Dimensio
 
 Source code for the middleware apk is available here: https://github.com/ZebraDevs/Mobile_Dimensioning_Samples/tree/main/Java/MDIntegrationApp
 
-Script used in Velocity host profile is attached to this project: 
-https://github.com/spoZebra/velocity-emulation-zebra-dimensioning/blob/7e0fe90606d20bbf6ff5e22d9b348acb332dd007/velocity-script-lauch-zebra-dimensioning.js
+Velocity Script used to invoke the middleware is attached to this repo: https://github.com/ZebraDevs/Mobile_Dimensioning_Samples/blob/22dd3245c49d677a674af34188a9a00288b6476f/Velocity%20-%20All%20Touch%20TE/velocity-script-lauch-zebra-dimensioning.js
+
+Along the full Velocity Console project: https://github.com/ZebraDevs/Mobile_Dimensioning_Samples/blob/22dd3245c49d677a674af34188a9a00288b6476f/Velocity%20-%20All%20Touch%20TE/Zebra%20Dimensioning%20-%20Velocity%20Console%20Profile.zip
 
 # License
 MIT
