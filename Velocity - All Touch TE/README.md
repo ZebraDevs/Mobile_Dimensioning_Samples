@@ -1,8 +1,5 @@
 
 # Zebra Parcel Dimensioning integration with Velocity 
-Use Mobile Parcel API from Zebra within Ivanti Velocity Client emulation (e.g. IBM 5250/3270 and VT100/220).
-API Reference: [Mobile Parcel API - TechDocs (zebra.com)](https://techdocs.zebra.com/mobile-parcel/latest/guide/api/)
-
 
 ## Introduction
 
@@ -35,10 +32,7 @@ This project contains all the resources needed to make the Zebra Parcel Dimensio
 ### Code
 
 Source code for the middleware apk is available here: https://github.com/ZebraDevs/Mobile_Dimensioning_Samples/tree/main/Java/MDIntegrationApp
-
-Velocity Script used to invoke the middleware is attached to this repo: https://github.com/ZebraDevs/Mobile_Dimensioning_Samples/blob/22dd3245c49d677a674af34188a9a00288b6476f/Velocity%20-%20All%20Touch%20TE/velocity-script-lauch-zebra-dimensioning.js
-
-Along the full Velocity Console project: https://github.com/ZebraDevs/Mobile_Dimensioning_Samples/blob/22dd3245c49d677a674af34188a9a00288b6476f/Velocity%20-%20All%20Touch%20TE/Zebra%20Dimensioning%20-%20Velocity%20Console%20Profile.zip
+The Velocity project **Zebra Dimensioning - Velocity Console Profile.zip** can be imported directly into Velocity Console.
 
 # License
 MIT
