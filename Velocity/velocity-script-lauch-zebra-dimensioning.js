@@ -4,10 +4,8 @@ Logger.debug("ZEBRA Dimensioning - Launch");
 // Create intent to launch the integration app
 var actionName = "com.sample.mdintegrationapp.GET_DIMENSION";
 
-var intent = {  
-	action: actionName,
-    package: "com.sample.mdintegrationapp",
-    class: "com.sample.mdintegrationapp.MainActivity",
+var intent = {
+	action: actionName
 };
 
 //Launch the integration app and capture dimensions
