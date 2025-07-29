@@ -17,6 +17,10 @@ See [Detailed Documentation](Java/MDIntegrationApp/README.md) here. Tested with:
 This sample demonstrates the Zebra recommended way of using the Mobile Parcel Dimensioning API from a web application running within Zebra Enterprise Browser. Use this as a reference to build your Application.
 See [Detailed Documentation](EnterpriseBrowser/ParcelMDClientSampleApp/README.md) here. Tested with: Enterprise Browser 5.0.0.13
 
+## React
+This sample demonstrates the Zebra recommended way of using the react-native-zebra-mobile-dimensioning module to enable dimensioning from within a React-Native application. Use this as a reference to build your Application.
+See [Detailed Documentation](React/ParcelMDClient/README.md) here.
+
 ## Velocity
 This sample uses the Mobile Parcel Dimensioning API within Ivanti Velocity Client emulation (e.g. IBM 5250/3270 and VT100/220). Use this as a reference to build your Application.
 See [Detailed Documentation](Velocity/README.md) here.
