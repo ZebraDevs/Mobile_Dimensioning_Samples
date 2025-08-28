@@ -12,6 +12,7 @@
     "@react-native-camera-roll/camera-roll": "^7.10.2",
     "@react-native-community/checkbox": "^0.5.20",
     "@react-native-masked-view/masked-view": "^0.3.2",
+    "@react-native-vector-icons/material-icons": "^12.3.0",
     "@react-native/new-app-screen": "0.80.1",
     "@react-navigation/drawer": "^7.5.3",
     "@react-navigation/native": "^7.1.14",
@@ -21,7 +22,7 @@
     "react-native-safe-area-context": "^5.5.2",
     "react-native-screens": "^4.13.1",
     "react-native-toast-message": "^2.3.3",
-    "react-native-zebra-mobile-dimensioning": "^0.1.0"
+    "react-native-zebra-mobile-dimensioning": "^0.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

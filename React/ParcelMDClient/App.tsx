@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   SafeAreaView,
   View,
@@ -14,7 +14,9 @@ import {
 } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import Toast from 'react-native-toast-message';
-import { CameraRoll } from "@react-native-camera-roll/camera-roll";
+import { CameraRoll } from '@react-native-camera-roll/camera-roll';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
+
 import {
   EnableDimension,
   GetDimension,
@@ -26,16 +28,30 @@ import {
 const { ZebraMobileDimensioning } = NativeModules;
 const eventEmitter = new NativeEventEmitter(ZebraMobileDimensioning);
 
+type DimensionStatus =
+  | typeof ZebraMobileDimensioning.NO_DIM
+  | typeof ZebraMobileDimensioning.ABOVE_RANGE
+  | typeof ZebraMobileDimensioning.BELOW_RANGE
+  | typeof ZebraMobileDimensioning.IN_RANGE;
+
 const App: React.FC = () => {
   const [objectId, setObjectId] = useState('');
   const [saveImage, setSaveImage] = useState(false);
-  const [unit, setUnit] = useState('cm');
-  const [length, setLength] = useState(0);
-  const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(0);
+  const [unit, setUnit] = useState('');
+  const [showUnits, setShowUnits] = useState(false);
+  const [length, setLength] = useState('');
+  const [width, setWidth] = useState('');
+  const [height, setHeight] = useState('');
   const [isDimensionEnabled, setIsDimensionEnabled] = useState(false);
   const [isInitialSetup, setIsInitialSetup] = useState(true);
-   const [isLandscape, setIsLandscape] = useState(false);
+  const [isLandscape, setIsLandscape] = useState(false);
+  const [lengthStatus, setLengthStatus] = useState('');
+  const [widthStatus, setWidthStatus] = useState('');
+  const [heightStatus, setHeightStatus] = useState('');
+
+  const readyLength = useRef('');
+  const readyWidth = useRef('');
+  const readyHeight = useRef('');
 
   const handleOrientationChange = ({ window }: { window: ScaledSize }) => {
     setIsLandscape(window.width > window.height);
@@ -98,14 +114,26 @@ const App: React.FC = () => {
             break;
           case ZebraMobileDimensioning.INTENT_ACTION_GET_DIMENSION_PARAMETER:
             if (resultCode === ZebraMobileDimensioning.SUCCESS) {
-              setSaveImage(event[ZebraMobileDimensioning.REPORT_IMAGE] || false);
-              let apiUnit = event[ZebraMobileDimensioning.DIMENSIONING_UNIT] || 'cm';
+              setSaveImage(
+                event[ZebraMobileDimensioning.REPORT_IMAGE] || false,
+              );
+              let apiUnit =
+                event[ZebraMobileDimensioning.DIMENSIONING_UNIT] || 'cm';
               setUnit(apiUnit.toLowerCase());
+              setShowUnits(
+                event[ZebraMobileDimensioning.SUPPORTED_UNITS].length > 1,
+              );
               // Update dimensions with READY values
-              setLength(event.READY_LENGTH || '0');
-              setWidth(event.READY_WIDTH || '0');
-              setHeight(event.READY_HEIGHT || '0');
-              setIsInitialSetup(false); // Initial setup completed
+              readyLength.current =
+                event[ZebraMobileDimensioning.READY_LENGTH] || '0';
+              readyWidth.current =
+                event[ZebraMobileDimensioning.READY_WIDTH] || '0';
+              readyHeight.current =
+                event[ZebraMobileDimensioning.READY_HEIGHT] || '0';
+              setLength(readyLength.current);
+              setWidth(readyWidth.current);
+              setHeight(readyHeight.current);
+              setIsInitialSetup(false);
             } else {
               Toast.show({
                 type: 'error',
@@ -116,15 +144,21 @@ const App: React.FC = () => {
             break;
           case ZebraMobileDimensioning.INTENT_ACTION_GET_DIMENSION:
             if (resultCode === ZebraMobileDimensioning.SUCCESS) {
-              const length = event[ZebraMobileDimensioning.LENGTH] || 0;
-              const width = event[ZebraMobileDimensioning.WIDTH] || 0;
-              const height = event[ZebraMobileDimensioning.HEIGHT] || 0;
+              const length =
+                event[ZebraMobileDimensioning.LENGTH] || readyLength.current;
+              const width =
+                event[ZebraMobileDimensioning.WIDTH] || readyWidth.current;
+              const height =
+                event[ZebraMobileDimensioning.HEIGHT] || readyHeight.current;
               setLength(length);
               setWidth(width);
               setHeight(height);
 
-              // Handle the image data
-              const cacheImagePath = event['IMAGE'];
+              setLengthStatus(event[ZebraMobileDimensioning.LENGTH_STATUS]);
+              setWidthStatus(event[ZebraMobileDimensioning.WIDTH_STATUS]);
+              setHeightStatus(event[ZebraMobileDimensioning.HEIGHT_STATUS]);
+
+              const cacheImagePath = event[ZebraMobileDimensioning.IMAGE];
 
               if (cacheImagePath) {
                 try {
@@ -135,7 +169,7 @@ const App: React.FC = () => {
                   console.error('Image storage failed', error);
                 }
               }
-            } else if (resultCode != ZebraMobileDimensioning.CANCELED) {
+            } else if (resultCode !== ZebraMobileDimensioning.CANCELED) {
               Toast.show({
                 type: 'error',
                 text1: 'Dimensioning Failed',
@@ -150,7 +184,7 @@ const App: React.FC = () => {
     );
 
     return () => {
-      DisableDimension({}); // Ensure dimensioning is disabled on unmount
+      DisableDimension({});
       subscription.remove();
     };
   }, []);
@@ -191,9 +225,41 @@ const App: React.FC = () => {
 
   const handleReset = () => {
     setObjectId('');
-    setLength(0);
-    setWidth(0);
-    setHeight(0);
+    setLength(readyLength.current);
+    setWidth(readyWidth.current);
+    setHeight(readyHeight.current);
+    setLengthStatus('');
+    setWidthStatus('');
+    setHeightStatus('');
+  };
+
+  const getDimensionStyle = (status: DimensionStatus) => {
+    switch (status) {
+      case ZebraMobileDimensioning.NO_DIM:
+        return styles.redBackground;
+      case ZebraMobileDimensioning.ABOVE_RANGE:
+      case ZebraMobileDimensioning.BELOW_RANGE:
+        return styles.orangeBackground;
+      case ZebraMobileDimensioning.IN_RANGE:
+        return styles.greenBackground;
+
+      default:
+        return styles.defaultBackground;
+    }
+  };
+
+  const getDimensionIcon = (status: DimensionStatus) => {
+    switch (status) {
+      case ZebraMobileDimensioning.ABOVE_RANGE:
+      case ZebraMobileDimensioning.BELOW_RANGE:
+        return <MaterialIcons name="warning" size={12} color="#FF8000" />;
+      case ZebraMobileDimensioning.IN_RANGE:
+        return <MaterialIcons name="check" size={12} color="#00B400" />;
+      case ZebraMobileDimensioning.NO_DIM:
+        return <MaterialIcons name="warning" size={12} color="#ED1C24" />;
+      default:
+        return null;
+    }
   };
 
   return (
@@ -247,30 +313,41 @@ const App: React.FC = () => {
             <Text style={styles.saveImageText}>Save Image</Text>
           </View>
         )}
-        <View style={isLandscape ? styles.landscapeUnitRow : styles.unitAndResetContainer}>
-          <View style={styles.unitToggleContainer}>
-            <TouchableOpacity
-              onPress={() => handleUnitChange('inch')}
-              style={[
-                styles.unitButton,
-                unit.toLowerCase() === 'inch' ? styles.unitSelected : null
-              ]}
-            >
-              <Text style={styles.unitText}>IN</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => handleUnitChange('cm')}
-              style={[
-                styles.unitButton,
-                unit.toLowerCase() === 'cm' ? styles.unitSelected : null
-              ]}
-            >
-              <Text style={styles.unitText}>CM</Text>
-            </TouchableOpacity>
-          </View>
+        <View
+          style={
+            isLandscape ? styles.landscapeUnitRow : styles.unitAndResetContainer
+          }
+        >
+          {showUnits && (
+            <View style={styles.unitToggleContainer}>
+              <TouchableOpacity
+                onPress={() => handleUnitChange('inch')}
+                style={[
+                  styles.unitButton,
+                  unit.toLowerCase() === 'inch' ? styles.unitSelected : null,
+                ]}
+              >
+                <Text style={styles.unitText}>IN</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => handleUnitChange('cm')}
+                style={[
+                  styles.unitButton,
+                  unit.toLowerCase() === 'cm' ? styles.unitSelected : null,
+                ]}
+              >
+                <Text style={styles.unitText}>CM</Text>
+              </TouchableOpacity>
+            </View>
+          )}
           <View style={styles.resetContainer}>
             <TouchableOpacity onPress={handleReset}>
-              <Text style={[styles.resetText, isLandscape ? { marginLeft: 40 } : { marginRight: 40 }]}>
+              <Text
+                style={[
+                  styles.resetText,
+                  isLandscape ? { marginLeft: 40 } : { marginRight: 40 },
+                ]}
+              >
                 RESET
               </Text>
             </TouchableOpacity>
@@ -287,23 +364,38 @@ const App: React.FC = () => {
           )}
         </View>
         <View style={styles.dimensionContainer}>
-          <View style={styles.dimensionBox}>
+          <View style={[styles.dimensionBox, getDimensionStyle(lengthStatus)]}>
             <Text style={styles.dimensionLabel}>Length:</Text>
-            <Text style={styles.dimensionValue}>
-              {length} {unit}
-            </Text>
+            <View style={styles.dimensionValueContainer}>
+              <Text style={styles.dimensionValue}>
+                {lengthStatus === ZebraMobileDimensioning.NO_DIM
+                  ? ZebraMobileDimensioning.NO_DIM
+                  : `${length} ${unit}`}
+              </Text>
+              {getDimensionIcon(lengthStatus)}
+            </View>
           </View>
-          <View style={styles.dimensionBox}>
+          <View style={[styles.dimensionBox, getDimensionStyle(widthStatus)]}>
             <Text style={styles.dimensionLabel}>Width:</Text>
-            <Text style={styles.dimensionValue}>
-              {width} {unit}
-            </Text>
+            <View style={styles.dimensionValueContainer}>
+              <Text style={styles.dimensionValue}>
+                {widthStatus === ZebraMobileDimensioning.NO_DIM
+                  ? ZebraMobileDimensioning.NO_DIM
+                  : `${width} ${unit}`}
+              </Text>
+              {getDimensionIcon(widthStatus)}
+            </View>
           </View>
-          <View style={styles.dimensionBox}>
+          <View style={[styles.dimensionBox, getDimensionStyle(heightStatus)]}>
             <Text style={styles.dimensionLabel}>Height:</Text>
-            <Text style={styles.dimensionValue}>
-              {height} {unit}
-            </Text>
+            <View style={styles.dimensionValueContainer}>
+              <Text style={styles.dimensionValue}>
+                {heightStatus === ZebraMobileDimensioning.NO_DIM
+                  ? ZebraMobileDimensioning.NO_DIM
+                  : `${height} ${unit}`}
+              </Text>
+              {getDimensionIcon(heightStatus)}
+            </View>
           </View>
         </View>
         <View style={styles.dimButtonContainer}>
@@ -490,9 +582,29 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 10,
   },
+  dimensionValueContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   dimensionValue: {
     color: '#ffffff',
     fontSize: 16,
+  },
+  redBackground: {
+    borderColor: '#FF0000',
+    borderWidth: 2,
+  },
+  orangeBackground: {
+    borderColor: '#FFA500',
+    borderWidth: 2,
+  },
+  greenBackground: {
+    borderColor: '#008000',
+    borderWidth: 2,
+  },
+  defaultBackground: {
+    backgroundColor: '#686767',
   },
 });
 
