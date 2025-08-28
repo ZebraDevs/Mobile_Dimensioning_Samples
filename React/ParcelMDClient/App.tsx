@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import Toast from 'react-native-toast-message';
-import RNFS from 'react-native-fs';
+import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import {
   EnableDimension,
   GetDimension,
@@ -125,12 +125,12 @@ const App: React.FC = () => {
 
               // Handle the image data
               const cacheImagePath = event['IMAGE'];
+
               if (cacheImagePath) {
-                const imageName = cacheImagePath.split('/').pop();
-                const picturesPath = `${RNFS.PicturesDirectoryPath}/${imageName}`;
                 try {
-                  await RNFS.copyFile(cacheImagePath, picturesPath);
-                  console.log('Image saved to Gallery:', picturesPath);
+                  // Save to gallery using CameraRoll
+                  const savedToGallery = await CameraRoll.saveAsset(cacheImagePath);
+                  console.log('Image saved to Gallery:', savedToGallery);
                 } catch (error) {
                   console.error('Image storage failed', error);
                 }
