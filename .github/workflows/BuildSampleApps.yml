@@ -1,0 +1,95 @@
+name: Sample Apps
+
+on:
+  workflow_dispatch:
+  push:
+      
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Decode Keystore
+        env:
+            LOCAL_KEYSTORE: ${{ secrets.LOCAL_KEYSTORE }}
+        run: echo $LOCAL_KEYSTORE | base64 -di > my-release-key.keystore
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin' # Or 'zulu', 'microsoft', 'corretto', etc.
+          cache: 'gradle' # Or 'gradle', 'sbt' depending on your build tool
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          cache-dependency-path: React/ParcelMDClient/package-lock.json
+          node-version: 20
+          cache: 'npm'
+      - name: NPM install
+        run: cd React/ParcelMDClient && npm install
+      - name: Build React Sample App
+        run: |
+          cd React/ParcelMDClient/android
+          chmod +x gradlew && ./gradlew assembleRelease\
+      - name: Copy React Sample App
+        run: |
+          mkdir $GITHUB_WORKSPACE/ReleaseBinaries
+          cp $GITHUB_WORKSPACE/React/ParcelMDClient/android/app/build/outputs/apk/release/app-release.apk $GITHUB_WORKSPACE/ReleaseBinaries/ReactParcelMDClient.apk
+      - name: Upload React ParcelMDClientSampleApp
+        uses: actions/upload-artifact@v4
+        with:
+          name: React ParcelMDClientSampleApp Binaries
+          path: ReleaseBinaries/ReactParcelMDClient.apk
+          if-no-files-found: error
+      - name: Build ParcelMDClientSampleApp
+        run: |
+          cd Java/ParcelMDClientSampleApp
+          chmod +x gradlew && ./gradlew assembleRelease
+      - name: Sign ParcelMDClientSampleApp
+        run: |
+          $ANDROID_HOME/build-tools/36.0.0/apksigner sign --ks $GITHUB_WORKSPACE/my-release-key.keystore --ks-pass pass:${{secrets.LOCAL_KEYSTORE_PASSWORD}} --out $GITHUB_WORKSPACE/ReleaseBinaries/ParcelMDClient.apk $GITHUB_WORKSPACE/Java/ParcelMDClientSampleApp/app/build/outputs/apk/release/DimensioningClient.apk
+      - name: Upload ParcelMDClientSampleApp
+        uses: actions/upload-artifact@v4
+        with:
+          name: ParcelMDClientSampleApp Binaries
+          path: ReleaseBinaries/ParcelMDClient.apk
+          if-no-files-found: error
+      - name: Build MDIntegrationApp
+        run: |
+          cd Java/MDIntegrationApp
+          chmod +x gradlew && ./gradlew assembleRelease
+      - name: Sign MDIntegrationApp
+        run: |
+          $ANDROID_HOME/build-tools/36.0.0/apksigner sign --ks $GITHUB_WORKSPACE/my-release-key.keystore --ks-pass pass:${{secrets.LOCAL_KEYSTORE_PASSWORD}} --out $GITHUB_WORKSPACE/ReleaseBinaries/MDIntegrationApp.apk $GITHUB_WORKSPACE/Java/MDIntegrationApp/app/build/outputs/apk/release/app-release-unsigned.apk
+      - name: Upload MDIntegrationApp
+        uses: actions/upload-artifact@v4
+        with:
+          name: MDIntegrationApp Binaries
+          path: ReleaseBinaries/MDIntegrationApp.apk
+          if-no-files-found: error
+  release:
+    if: ${{ startsWith(github.ref, 'refs/tags/') }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v5
+        with:
+          path: binaries
+          merge-multiple: true
+      - name: Zip binaries
+        run: zip -r binaries.zip binaries
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" binaries.zip  \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
+              --generate-notes
+
+
