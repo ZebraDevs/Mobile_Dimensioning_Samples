@@ -9,6 +9,8 @@ import {
   ScrollView,
   NativeEventEmitter,
   NativeModules,
+  Dimensions,
+  ScaledSize,
 } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import Toast from 'react-native-toast-message';
@@ -33,6 +35,19 @@ const App: React.FC = () => {
   const [height, setHeight] = useState(0);
   const [isDimensionEnabled, setIsDimensionEnabled] = useState(false);
   const [isInitialSetup, setIsInitialSetup] = useState(true);
+   const [isLandscape, setIsLandscape] = useState(false);
+
+  const handleOrientationChange = ({ window }: { window: ScaledSize }) => {
+    setIsLandscape(window.width > window.height);
+  };
+
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener('change', handleOrientationChange);
+    handleOrientationChange({ window: Dimensions.get('window') });
+    return () => {
+      subscription?.remove();
+    };
+  }, []);
 
   useEffect(() => {
     EnableDimension({ MODULE: ZebraMobileDimensioning.PARCEL_MODULE });
@@ -183,7 +198,6 @@ const App: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Toolbar */}
       <View style={styles.toolbar}>
         <Text style={styles.toolbarText}>React Mobile Parcel Dimensioning</Text>
       </View>
@@ -202,7 +216,7 @@ const App: React.FC = () => {
         <Text style={styles.descriptionText}>
           Scan or type in your Object ID:
         </Text>
-        <View style={styles.objectIdContainer}>
+        <View style={isLandscape ? styles.landscapeObjectIdRow : styles.objectIdContainer}>
           <Text style={styles.objectIdLabel}>Object ID:</Text>
           <TextInput
             style={styles.objectIdInput}
@@ -210,23 +224,31 @@ const App: React.FC = () => {
             value={objectId}
             onChangeText={setObjectId}
           />
+          {isLandscape && (
+            <TouchableOpacity onPress={handleScanBarcode} style={styles.landscapeScanButton}>
+              <Text style={styles.buttonText}>Scan Barcode</Text>
+            </TouchableOpacity>
+          )}
         </View>
-        <View style={styles.scanButtonContainer}>
-          <TouchableOpacity onPress={handleScanBarcode} style={styles.button}>
-            <Text style={styles.buttonText}>Scan Barcode</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.saveImageContainer}>
-          <CheckBox
-            value={saveImage}
-            onValueChange={handleSaveImageChange}
-            tintColors={{ true: '#2185D5', false: '#ccc' }}
-          />
-          <Text style={styles.saveImageText}>Save Image</Text>
-        </View>
-        <View style={styles.unitAndResetContainer}>
+        {!isLandscape && (
+          <View style={styles.scanButtonContainer}>
+            <TouchableOpacity onPress={handleScanBarcode} style={styles.button}>
+              <Text style={styles.buttonText}>Scan Barcode</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        {!isLandscape && (
+          <View style={styles.saveImageContainer}>
+            <CheckBox
+              value={saveImage}
+              onValueChange={handleSaveImageChange}
+              tintColors={{ true: '#2185D5', false: '#ccc' }}
+            />
+            <Text style={styles.saveImageText}>Save Image</Text>
+          </View>
+        )}
+        <View style={isLandscape ? styles.landscapeUnitRow : styles.unitAndResetContainer}>
           <View style={styles.unitToggleContainer}>
-            {/* INCH BUTTON */}
             <TouchableOpacity
               onPress={() => handleUnitChange('inch')}
               style={[
@@ -236,7 +258,6 @@ const App: React.FC = () => {
             >
               <Text style={styles.unitText}>IN</Text>
             </TouchableOpacity>
-            {/* CM BUTTON */}
             <TouchableOpacity
               onPress={() => handleUnitChange('cm')}
               style={[
@@ -249,9 +270,21 @@ const App: React.FC = () => {
           </View>
           <View style={styles.resetContainer}>
             <TouchableOpacity onPress={handleReset}>
-              <Text style={styles.resetText}>RESET</Text>
+              <Text style={[styles.resetText, isLandscape ? { marginLeft: 40 } : { marginRight: 40 }]}>
+                RESET
+              </Text>
             </TouchableOpacity>
           </View>
+          {isLandscape && (
+            <View style={styles.landscapeSaveImageContainer}>
+              <CheckBox
+                value={saveImage}
+                onValueChange={handleSaveImageChange}
+                tintColors={{ true: '#2185D5', false: '#ccc' }}
+              />
+              <Text style={styles.saveImageText}>Save Image</Text>
+            </View>
+          )}
         </View>
         <View style={styles.dimensionContainer}>
           <View style={styles.dimensionBox}>
@@ -343,13 +376,29 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginLeft: 10,
   },
+  landscapeObjectIdRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#686767',
+    alignItems: 'center',
+    margin: 10,
+    padding: 10,
+  },
   scanButtonContainer: {
     width: '50%',
     alignSelf: 'center',
     marginVertical: 5,
   },
+  landscapeScanButton: {
+    flex: 0.3,
+    backgroundColor: '#2196F3',
+    borderRadius: 5,
+    padding: 10,
+    alignItems: 'center',
+    marginLeft: 10,
+  },
   dimButtonContainer: {
-    width: '90%',
+    width: '95%',
     alignSelf: 'center',
     marginVertical: 5,
   },
@@ -360,7 +409,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
-    color: '#000000', // Black text color
+    color: '#000000',
     fontSize: 16,
     fontWeight: 'bold',
   },
@@ -368,6 +417,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     margin: 10,
+  },
+  landscapeSaveImageContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
   },
   saveImageText: {
     color: '#ffffff',
@@ -378,6 +432,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     margin: 15,
+  },
+  landscapeUnitRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    margin: 10,
+    padding: 10,
   },
   unitToggleContainer: {
     flexDirection: 'row',
@@ -408,7 +469,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     padding: 10,
-    marginRight: 50,
   },
   dimensionContainer: {
     flexDirection: 'row',
@@ -416,8 +476,9 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   dimensionBox: {
+    flex: 1, // Equally spaced boxes in landscape
     backgroundColor: '#444444',
-    width: 100,
+    marginHorizontal: 5,
     height: 50,
     justifyContent: 'center',
     padding: 5,
