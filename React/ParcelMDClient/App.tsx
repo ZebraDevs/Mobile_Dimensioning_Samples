@@ -11,6 +11,8 @@ import {
   NativeModules,
   Dimensions,
   ScaledSize,
+  AppState,
+  AppStateStatus,
 } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import Toast from 'react-native-toast-message';
@@ -49,6 +51,7 @@ const App: React.FC = () => {
   const [widthStatus, setWidthStatus] = useState('');
   const [heightStatus, setHeightStatus] = useState('');
 
+  const isEnableCalled = useRef(false);
   const readyLength = useRef('');
   const readyWidth = useRef('');
   const readyHeight = useRef('');
@@ -57,8 +60,49 @@ const App: React.FC = () => {
     setIsLandscape(window.width > window.height);
   };
 
+  const ignoreOneBackgroundState = useRef(true);
+
   useEffect(() => {
-    const subscription = Dimensions.addEventListener('change', handleOrientationChange);
+    const handleFocusChange = () => {
+      if (!isEnableCalled.current) {
+        ignoreOneBackgroundState.current = true;
+        isEnableCalled.current = true;
+        EnableDimension({ MODULE: ZebraMobileDimensioning.PARCEL_MODULE });
+      }
+    };
+    const handleAppStateChange = (nextAppState: AppStateStatus) => {
+      if (nextAppState === 'background') {
+        if (ignoreOneBackgroundState.current)
+          ignoreOneBackgroundState.current = false;
+        else {
+          ignoreOneBackgroundState.current = true;
+          isEnableCalled.current = false;
+          setIsDimensionEnabled(false);
+          DisableDimension({});
+        }
+      }
+    };
+
+    const appStateSubscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange,
+    );
+    const focusSubscription = AppState.addEventListener(
+      'focus',
+      handleFocusChange,
+    );
+
+    return () => {
+      appStateSubscription.remove();
+      focusSubscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener(
+      'change',
+      handleOrientationChange,
+    );
     handleOrientationChange({ window: Dimensions.get('window') });
     return () => {
       subscription?.remove();
@@ -66,11 +110,13 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    ignoreOneBackgroundState.current = true;
+    isEnableCalled.current = true;
     EnableDimension({ MODULE: ZebraMobileDimensioning.PARCEL_MODULE });
 
     const subscription = eventEmitter.addListener(
       ZebraMobileDimensioning.DIMENSIONING_EVENT,
-      async (event) => {
+      async event => {
         const action = event[ZebraMobileDimensioning.ACTION];
         const message = event[ZebraMobileDimensioning.RESULT_MESSAGE];
         const resultCode = event[ZebraMobileDimensioning.RESULT_CODE];
@@ -82,6 +128,7 @@ const App: React.FC = () => {
             // After enabling, call Get Parameters to update the UI
             if (resultCode === ZebraMobileDimensioning.SUCCESS) {
               setIsDimensionEnabled(true);
+              ignoreOneBackgroundState.current = true;
               GetDimensionParameters({});
             } else {
               Toast.show({
@@ -89,6 +136,7 @@ const App: React.FC = () => {
                 text1: 'Enable Dimension Failed',
                 text2: message,
               });
+              isEnableCalled.current = false;
             }
             break;
           case ZebraMobileDimensioning.INTENT_ACTION_DISABLE_DIMENSION:
@@ -103,6 +151,7 @@ const App: React.FC = () => {
           case ZebraMobileDimensioning.INTENT_ACTION_SET_DIMENSION_PARAMETER:
             // After setting parameters, call Get Parameters again to update the ready values
             if (resultCode === ZebraMobileDimensioning.SUCCESS) {
+              ignoreOneBackgroundState.current = true;
               GetDimensionParameters({});
             } else {
               Toast.show({
@@ -163,7 +212,9 @@ const App: React.FC = () => {
               if (cacheImagePath) {
                 try {
                   // Save to gallery using CameraRoll
-                  const savedToGallery = await CameraRoll.saveAsset(cacheImagePath);
+                  const savedToGallery = await CameraRoll.saveAsset(
+                    cacheImagePath,
+                  );
                   console.log('Image saved to Gallery:', savedToGallery);
                 } catch (error) {
                   console.error('Image storage failed', error);
@@ -184,6 +235,9 @@ const App: React.FC = () => {
     );
 
     return () => {
+      ignoreOneBackgroundState.current = true;
+      isEnableCalled.current = false;
+      setIsDimensionEnabled(false);
       DisableDimension({});
       subscription.remove();
     };
@@ -192,6 +246,7 @@ const App: React.FC = () => {
   useEffect(() => {
     if (!isInitialSetup) {
       const updateDimensionParameters = async () => {
+        ignoreOneBackgroundState.current = true;
         await SetDimensionParameters({
           DIMENSIONING_UNIT: unit,
           REPORT_IMAGE: saveImage,
@@ -220,6 +275,7 @@ const App: React.FC = () => {
   };
 
   const handleStartDimensioning = () => {
+    ignoreOneBackgroundState.current = true;
     GetDimension({ OBJECT_ID: objectId });
   };
 
@@ -282,7 +338,11 @@ const App: React.FC = () => {
         <Text style={styles.descriptionText}>
           Scan or type in your Object ID:
         </Text>
-        <View style={isLandscape ? styles.landscapeObjectIdRow : styles.objectIdContainer}>
+        <View
+          style={
+            isLandscape ? styles.landscapeObjectIdRow : styles.objectIdContainer
+          }
+        >
           <Text style={styles.objectIdLabel}>Object ID:</Text>
           <TextInput
             style={styles.objectIdInput}
@@ -291,7 +351,10 @@ const App: React.FC = () => {
             onChangeText={setObjectId}
           />
           {isLandscape && (
-            <TouchableOpacity onPress={handleScanBarcode} style={styles.landscapeScanButton}>
+            <TouchableOpacity
+              onPress={handleScanBarcode}
+              style={styles.landscapeScanButton}
+            >
               <Text style={styles.buttonText}>Scan Barcode</Text>
             </TouchableOpacity>
           )}
