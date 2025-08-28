@@ -39,6 +39,7 @@ public class DimensioningConstants
     public static final String HEIGHT_STATUS = "HEIGHT_STATUS";
     public static final String TIMESTAMP = "TIMESTAMP";
     public static final String IMAGE = "IMAGE";
+    public static final String MESSAGE = "MESSAGE";
     public static final String PARCEL_ID = "PARCEL_ID";
 
     public static final String PARCEL_MODULE = "parcel";

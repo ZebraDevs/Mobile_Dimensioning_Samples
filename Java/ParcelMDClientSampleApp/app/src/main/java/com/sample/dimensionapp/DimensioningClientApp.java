@@ -402,6 +402,11 @@ public class DimensioningClientApp extends AppCompatActivity implements Navigati
                                         saveImage(bitmapImage, timestamp);
                                         Log.d(TAG, "bitmapImage is : " + bitmapImage);
                                     }
+                                    if (extras.containsKey(DimensioningConstants.MESSAGE))
+                                    {
+                                        String MESSAGE = intent.getStringExtra(DimensioningConstants.MESSAGE);
+                                        Log.d(TAG, "MESSAGE is : " + MESSAGE);
+                                    }
                                     if (extras.containsKey(DimensioningConstants.PARCEL_ID))
                                     {
                                         String PARCEL_ID = intent.getStringExtra(DimensioningConstants.PARCEL_ID);
