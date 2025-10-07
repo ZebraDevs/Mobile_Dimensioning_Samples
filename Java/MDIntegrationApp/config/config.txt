@@ -1,5 +1,6 @@
 imperial_units=false
 allow_empty_barcode=false
+automatic_dim=false
 automatic_upload=false
 url=
 report_image=false

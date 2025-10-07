@@ -51,6 +51,7 @@ The MDIntegrationApp is configured via text files located in the private applica
 Basic configuration for the MDIntegrationApp can be found in the `config.txt` file located in the application storage. A sample can be found [here](config/config.txt).
 - `imperial_units` - If `true`, dimensioning results will be in inches, otherwise results will be in centimeters.
 - `allow_empty_barcode` - If `true`, the app will allow dimensioning without first requiring a barcode / ID.
+- `automatic_dim` - If `true`, the app will automatically start dimensioning when dimensioning is allowed without displaying the Start Dimensioning button.
 - `automatic_upload` - If `true`, the app will automatically finish a dimensioning session after dimensioning and start data output without displaying the Upload button.
 - `url` - If defined, this parameter enables [HTTP upload](#http-upload) to the defined URL.
 - `report_image` - If `true`, the app will include a base64 encoded JPEG image in the HTTP upload.

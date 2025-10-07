@@ -18,6 +18,7 @@ public class DimensioningBaseActivity extends AppCompatActivity {
     private static final String TAG = DimensioningBaseActivity.class.getSimpleName();
     static boolean mIsDimensionServiceEnabling = false;
     static boolean mIsDimensionServiceEnabled = false;
+    static boolean mAutomaticTrigger = false;
     static final int REQUEST_CODE = 100;
     static final long ENABLE_RETRY_DELAY = 500L;
     static final int MAX_ENABLE_RETRIES = 3;
@@ -154,9 +155,13 @@ public class DimensioningBaseActivity extends AppCompatActivity {
      * enableStartDimensioningButton function is used to Enable the START DIMENSION button.
      */
     public void enableStartDimensioningButton() {
-        mStartDimensioningButton.setEnabled(true);
-        mStartDimensioningButton.setClickable(true);
-        mStartDimensioningButton.setBackgroundColor(getColor(R.color.blue));
+        if (mAutomaticTrigger) {
+            mStartDimensioningButton.callOnClick();
+        } else {
+            mStartDimensioningButton.setEnabled(true);
+            mStartDimensioningButton.setClickable(true);
+            mStartDimensioningButton.setBackgroundColor(getColor(R.color.blue));
+        }
     }
 
     /**

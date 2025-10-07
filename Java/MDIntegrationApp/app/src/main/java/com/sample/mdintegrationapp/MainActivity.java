@@ -1,5 +1,9 @@
 package com.sample.mdintegrationapp;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+import static com.sample.mdintegrationapp.Config.ALLOW_EMPTY_BARCODE;
+import static com.sample.mdintegrationapp.Config.AUTOMATIC_DIM;
 import static com.sample.mdintegrationapp.Config.AUTOMATIC_UPLOAD;
 import static com.sample.mdintegrationapp.Config.CONNECT_TIMEOUT;
 import static com.sample.mdintegrationapp.Config.NUM_RETRIES;
@@ -26,10 +30,14 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import androidx.activity.EdgeToEdge;
@@ -58,6 +66,8 @@ import java.util.List;
 
 public class MainActivity extends DimensioningBaseActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
+    private View mMainLayout;
+    private ProgressBar mProgressBar;
     private ImageView mResultImageView;
     private EditText mBarcodeEditText;
     private Button mUploadButton;
@@ -66,6 +76,8 @@ public class MainActivity extends DimensioningBaseActivity {
     private static Bitmap mBitmapImage = null;
     private static String mURL = null;
     private DimensioningResult mDimensioningResult;
+    private boolean mHideUI = false;
+    private boolean mTriggerAfterID = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,27 +90,32 @@ public class MainActivity extends DimensioningBaseActivity {
             v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
             return insets;
         });
-        Config.setConfigDirectory(getExternalFilesDir(null) + File.separator);
+
+        initialization(); //Init UI elements
+
         new Thread(() ->
         {
+            Config.setConfigDirectory(getExternalFilesDir(null) + File.separator);
+
             Config.init();
             initializePublisher();
-        }).start(); //Init Config
-        new Thread(() ->
-        {
+
             try {
                 parseAttributesFile();
             } catch (IOException e) {
                 Log.e(TAG, "Failed to load attributes file", e);
             }
-        }).start(); //Init attributes
-        initialization(); //Init UI elements
+            mTriggerAfterID = (Boolean.parseBoolean(Config.getSetting(AUTOMATIC_DIM)) && !Boolean.parseBoolean(Config.getSetting(ALLOW_EMPTY_BARCODE)));
+            mAutomaticTrigger = mHideUI = (Boolean.parseBoolean(Config.getSetting(AUTOMATIC_DIM)) && Boolean.parseBoolean(Config.getSetting(ALLOW_EMPTY_BARCODE)));
+            if (!mHideUI)
+                showUI();
+        }).start(); //Init Config
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putBoolean(Constants.UPLOAD_BUTTON_IS_VISIBLE, mUploadButton.getVisibility() == View.VISIBLE);
+        savedInstanceState.putBoolean(Constants.UPLOAD_BUTTON_IS_VISIBLE, mUploadButton.getVisibility() == VISIBLE);
         savedInstanceState.putBoolean(Constants.START_BUTTON_IS_ENABLED, mStartDimensioningButton.isEnabled());
         if (mDimensioningResult != null)
             mDimensioningResult.setImage(null); // Can't fit BASE64-encoded image in Bundle
@@ -111,7 +128,7 @@ public class MainActivity extends DimensioningBaseActivity {
         boolean isUploadButtonVisible = savedInstanceState.getBoolean(Constants.UPLOAD_BUTTON_IS_VISIBLE);
         boolean isStartButtonEnabled = savedInstanceState.getBoolean(Constants.START_BUTTON_IS_ENABLED);
         mDimensioningResult = mGson.fromJson(savedInstanceState.getString(Constants.DIMENSIONING_RESULT), DimensioningResult.class);
-        mUploadButton.setVisibility(isUploadButtonVisible ? View.VISIBLE : View.GONE);
+        mUploadButton.setVisibility(isUploadButtonVisible ? VISIBLE : GONE);
         if (isStartButtonEnabled)
             enableStartDimensioningButton();
         else
@@ -147,6 +164,8 @@ public class MainActivity extends DimensioningBaseActivity {
      * Initialization of all Drawables
      */
     public void initialization() {
+        mMainLayout = findViewById(R.id.main);
+        mProgressBar = findViewById(R.id.progress_bar);
         mResultImageView = findViewById(R.id.result_imageview);
         mBarcodeEditText = findViewById(R.id.edittext_barcode);
         mStartDimensioningButton = findViewById(R.id.button_start_dimensioning);
@@ -161,12 +180,13 @@ public class MainActivity extends DimensioningBaseActivity {
             public void onClick(View view) {
                 String parcelID = mBarcodeEditText.getText().toString();
                 setBackgroundImage(null);
-                mUploadButton.setVisibility(View.GONE);
+                mUploadButton.setVisibility(GONE);
                 Log.d(TAG, "parcelID is: " + parcelID);
                 Log.d(TAG, "Start Dimensioning");
                 if (mIsDimensionServiceEnabled) {
                     sendIntentApi(DimensioningConstants.INTENT_ACTION_GET_DIMENSION, DimensioningConstants.PARCEL_ID, parcelID);
                 }
+                mBarcodeEditText.setEnabled(false);
                 disableStartDimensioningButton();
             }
         });
@@ -195,6 +215,24 @@ public class MainActivity extends DimensioningBaseActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
+            }
+        });
+
+        mBarcodeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (mTriggerAfterID && mBarcodeEditText.isEnabled()) {
+                    if (v.getText().length() != 0) {
+                        if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE || event != null && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                            if (event == null || !event.isShiftPressed()) {
+                                // Set mBarcodeEditText disabled to prevent multiple triggers
+                                mBarcodeEditText.setEnabled(false);
+                                mStartDimensioningButton.callOnClick();
+                            }
+                        }
+                    }
+                }
+                return false;
             }
         });
 
@@ -238,6 +276,7 @@ public class MainActivity extends DimensioningBaseActivity {
             mAttribute4Button.setChecked(false);
             mBarcodeEditText.getText().clear();
 
+            boolean convertBitmap = Boolean.parseBoolean(Config.getSetting(REPORT_IMAGE)) && mURL != null && mBitmapImage != null;
             new Thread(() ->
             { //Run slow bitmap operation on separate thread
                 //Only convert the image if needed
@@ -245,7 +284,7 @@ public class MainActivity extends DimensioningBaseActivity {
                 if (action.equals(DIMENSIONING_RESULT_INTENT_ACTION_GET_DIMENSION))
                     //startActivityForResult will receive JSON string of DimensioningResult without image (too big)
                     setResult(RESULT_OK, new Intent().putExtra(DIMENSIONING_RESULT_INTENT_EXTRA_DIMENSIONING_RESULT, mGson.toJson(mDimensioningResult)));
-                if (Boolean.parseBoolean(Config.getSetting(REPORT_IMAGE)) && mURL != null)
+                if (convertBitmap)
                     mDimensioningResult.setImage("data:image/jpeg;base64," + convertBitmapToBase64(mBitmapImage));
                 else
                     mDimensioningResult.setImage(null);
@@ -294,9 +333,16 @@ public class MainActivity extends DimensioningBaseActivity {
             else if (success && !action.equals(Intent.ACTION_MAIN))
                 // Return to calling app if launched by web browser Intent
                 moveTaskToBack(true);
-            else if (mIsDimensionServiceEnabled)
-                if (Boolean.parseBoolean(Config.getSetting(Config.ALLOW_EMPTY_BARCODE)) || mBarcodeEditText.getText().length() != 0)
-                    enableStartDimensioningButton();
+            else if (success && mIsDimensionServiceEnabled &&
+                    Boolean.parseBoolean(Config.getSetting(Config.ALLOW_EMPTY_BARCODE)) || mBarcodeEditText.getText().length() != 0)
+                enableStartDimensioningButton();
+            else if (!success) {
+                mUploadButton.setVisibility(VISIBLE);
+                if (mHideUI) {
+                    showUI();
+                    mHideUI = false;
+                }
+            }
         });
     }
 
@@ -348,7 +394,7 @@ public class MainActivity extends DimensioningBaseActivity {
 
                         case DimensioningConstants.INTENT_ACTION_GET_DIMENSION:
                             try {
-                                if (dimResultCode == DimensioningConstants.SUCCESS) {
+                                if (dimResultCode == DimensioningConstants.SUCCESS || (dimResultCode == DimensioningConstants.CANCELED && mHideUI && Boolean.parseBoolean(Config.getSetting(AUTOMATIC_UPLOAD, "false")))) {
                                     mDimensioningResult = new DimensioningResult();
                                     Bundle extras = intent.getExtras();
                                     if (extras.containsKey(DimensioningConstants.DIMENSIONING_UNIT)) {
@@ -400,9 +446,21 @@ public class MainActivity extends DimensioningBaseActivity {
                                     if (Boolean.parseBoolean(Config.getSetting(AUTOMATIC_UPLOAD, "false")))
                                         handleUpload();
                                     else
-                                        mUploadButton.setVisibility(View.VISIBLE);
+                                        mUploadButton.setVisibility(VISIBLE);
+
+                                    if (mHideUI && !Boolean.parseBoolean(Config.getSetting(AUTOMATIC_UPLOAD, "false"))) {
+                                        showUI();
+                                        mHideUI = false;
+                                    }
+                                } else if (dimResultCode == DimensioningConstants.CANCELED) {
+                                    if (Boolean.parseBoolean(Config.getSetting(AUTOMATIC_DIM)))
+                                        mBarcodeEditText.getText().clear();
+                                    if (Boolean.parseBoolean(Config.getSetting(Config.ALLOW_EMPTY_BARCODE)) || mBarcodeEditText.getText().length() != 0)
+                                        enableStartDimensioningButton();
                                 }
-                                if ((dimResultCode != DimensioningConstants.SUCCESS) && (dimResultCode != DimensioningConstants.CANCELED)) {
+                                if ((dimResultCode == DimensioningConstants.SUCCESS) || (dimResultCode == DimensioningConstants.CANCELED)) {
+                                    mBarcodeEditText.setEnabled(true);
+                                } else {
                                     showToast(dimResultMessage);
                                     sendIntentApi(DimensioningConstants.INTENT_ACTION_DISABLE_DIMENSION, DimensioningConstants.MODULE, DimensioningConstants.PARCEL_MODULE);
                                 }
@@ -555,8 +613,15 @@ public class MainActivity extends DimensioningBaseActivity {
      */
     private void displayScanResult(Intent initiatingIntent) {
         String decodedData = initiatingIntent.getStringExtra(Constants.DATA_WEDGE_INTENT_DATA_KEY);
-        mBarcodeEditText.getText().clear();
-        mBarcodeEditText.setText(decodedData);
+        if (mBarcodeEditText.isEnabled()) {
+            mBarcodeEditText.getText().clear();
+            mBarcodeEditText.setText(decodedData);
+            if (mTriggerAfterID) {
+                // Set mBarcodeEditText disabled to prevent multiple triggers
+                mBarcodeEditText.setEnabled(false);
+                mStartDimensioningButton.callOnClick();
+            }
+        }
     }
 
     private void setDataWedgeProfile() {
@@ -636,7 +701,7 @@ public class MainActivity extends DimensioningBaseActivity {
                 tb.setTextOn(attribute.getLabelOn());
                 tb.setTextOff(attribute.getLabelOff());
                 tb.setText(tb.isChecked() ? tb.getTextOn() : tb.getTextOff()); //necessary to instantaneously update
-                tb.setVisibility(View.VISIBLE);
+                tb.setVisibility(VISIBLE);
             });
         }
     }
@@ -654,5 +719,14 @@ public class MainActivity extends DimensioningBaseActivity {
             default:
                 return null;
         }
+    }
+
+    private void showUI() {
+        runOnUiThread(() ->
+        {
+            Log.d(TAG, "showUI");
+            mMainLayout.setVisibility(VISIBLE);
+            mProgressBar.setVisibility(GONE);
+        });
     }
 }

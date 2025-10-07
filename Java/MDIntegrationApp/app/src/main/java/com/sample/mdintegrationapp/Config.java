@@ -11,6 +11,7 @@ import java.util.Properties;
 public class Config {
     public static final String IMPERIAL_UNITS = "imperial_units";
     public static final String ALLOW_EMPTY_BARCODE = "allow_empty_barcode";
+    public static final String AUTOMATIC_DIM = "automatic_dim";
     public static final String AUTOMATIC_UPLOAD = "automatic_upload";
     public static final String REPORT_IMAGE = "report_image";
     public static final String URL = "url";
