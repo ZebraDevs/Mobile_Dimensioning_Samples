@@ -281,7 +281,7 @@ public class MainActivity extends DimensioningBaseActivity {
             { //Run slow bitmap operation on separate thread
                 //Only convert the image if needed
                 String action = getIntent().getAction();
-                if (action.equals(DIMENSIONING_RESULT_INTENT_ACTION_GET_DIMENSION))
+              //  if (action.equals(DIMENSIONING_RESULT_INTENT_ACTION_GET_DIMENSION))
                     //startActivityForResult will receive JSON string of DimensioningResult without image (too big)
                     setResult(RESULT_OK, new Intent().putExtra(DIMENSIONING_RESULT_INTENT_EXTRA_DIMENSIONING_RESULT, mGson.toJson(mDimensioningResult)));
                 if (convertBitmap)
