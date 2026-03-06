@@ -327,10 +327,10 @@ public class MainActivity extends DimensioningBaseActivity {
     private void completeHandleUpload(boolean success) {
         runOnUiThread(() -> {
             String action = getIntent().getAction();
-            if (success && action.equals(DIMENSIONING_RESULT_INTENT_ACTION_GET_DIMENSION))
+            //if (success && action.equals(DIMENSIONING_RESULT_INTENT_ACTION_GET_DIMENSION))
                 //Return to calling app if launched with startActivityForResult
                 finish();
-            else if (success && !action.equals(Intent.ACTION_MAIN))
+            if (success && !action.equals(Intent.ACTION_MAIN))
                 // Return to calling app if launched by web browser Intent
                 moveTaskToBack(true);
             else if (success && mIsDimensionServiceEnabled &&
